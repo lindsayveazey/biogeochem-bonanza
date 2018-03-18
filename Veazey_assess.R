@@ -94,6 +94,7 @@ SIR.model(720, 0.0007, 1/3650) # Run for 2 years (720 days), beta = c*p = 0.1*0.
 
 #######################################################################################################
 ###### Part 2, Q2 ######
+# Plot 1: pinpoint villages that have shown an increase since mid-program monitoring (2003)
 names(mda)[names(mda) == 'ADMIN2ID'] = 'admin2id'
 bvmda <- merge(bv, mda, by = 'admin2id') # Note- only 34 unique IDs in mda
 # Subset bvmda to cov-only df (temp)
@@ -103,5 +104,79 @@ covsub$covsum <- rowSums(covsub, na.rm = TRUE)
 # Count number of non-NAs per row per df
 covsub$na_count <- apply(covsub, 1, function(x) sum(!is.na(x) - 1))
 covsub$non_na_count <- 5 - covsub$na_count 
-# Calculate mean cov per point
+# Calculate mean cov per point and merge
 covmn <- transform(covsub, covmn = covsum/non_na_count)
+bvmda <- cbind(bvmda, covmn$covmn)
+names(bvmda)[names(bvmda) == 'covmn$covmn'] = 'COV_MN'
+# Merge mid program monitoring data with other file based on village_id
+all <- merge(bvmda, mon, by = 'village_id') # 82 rows
+# Find villages that have shown an increase in avg prev from 2003 - 2005
+all$modchange <- all$avprev - all$skin_prev_monitor
+
+# Plot 2 is interpolation in ArcGis using avprev
+
+# Plot 3: Color matrix based on effort and effectiveness metrics
+# For loop to adjust COV_MN vals
+for (i in 1:nrow(bvmda)) {
+  if (bvmda$vector_01[i] == 2) {
+    bvmda$COV_MN_ADJ[i] = bvmda$COV_MN[i] - 10}  
+  else { 
+    if (bvmda$vector_01[i] == 1) {
+      bvmda$COV_MN_ADJ[i] = bvmda$COV_MN[i] + 10}}} 
+    
+# For loop to assign "effort" rank based on adjusted (account for vector prog) cov quantiles
+quantile(bvmda$COV_MN_ADJ)
+#    0%   25%   50%   75%  100% 
+#  64.4  70.6  87.0  90.4 100.0 
+for (i in 1:nrow(bvmda)) {
+  if (bvmda$COV_MN_ADJ[i] < 70.6) {
+    bvmda$effortRank[i] = 1}  
+  else { 
+    if (bvmda$COV_MN_ADJ[i] < 90.4 && bvmda$COV_MN_ADJ[i] >= 70.6) {
+      bvmda$effortRank[i] = 2}  
+    else { 
+      if (bvmda$COV_MN_ADJ[i] >= 90.4) {
+        bvmda$effortRank[i] = 3}}}}
+
+bvmda$effortRank <- as.numeric(bvmda$effortRank)
+
+# For loop to assign combined effort and effectiveness rank based on adjusted (account for vector prog) cov quantiles
+quantile(bvmda$avprev, na.rm=T)
+#        0%       25%       50%       75%      100% 
+# 0.0099010 0.1841305 0.2515845 0.4675766 0.8709677
+
+sub <- bvmda[ ,c(3:4, 18, 29)]
+sub <- na.omit(sub) # 328 rows
+
+for (i in 1:nrow(sub)) {
+  if (sub$avprev[i] >= 0.4675766 && sub$effortRank[i] == 1) { # bottom left
+    sub$comRank[i] <- 1}  
+  else { 
+    if (sub$avprev[i] >= 0.1841305 && sub$avprev[i] < 0.4675766 && sub$effortRank[i] == 1) { # bottom middle
+      sub$comRank[i] <- 2}  
+    else { 
+      if (sub$avprev[i] < 0.1841305 && sub$effortRank[i] == 1) { # bottom right
+        sub$comRank[i] <- 3}
+      else {
+        if (sub$avprev[i] >= 0.4675766 && sub$effortRank[i] == 2) { # center left
+          sub$comRank[i] <- 4}  
+        else { 
+          if (sub$avprev[i] >= 0.1841305 && sub$avprev[i] < 0.4675766 && sub$effortRank[i] == 2) { # center middle
+            sub$comRank[i] <- 5}  
+          else { 
+            if (sub$avprev[i] < 0.1841305 && sub$effortRank[i] == 2) { # center right
+              sub$comRank[i] <- 6}
+            else {
+            if (sub$avprev[i] >= 0.4675766 && sub$effortRank[i] == 3) { # top left
+              sub$comRank[i] <- 7}  
+            else { 
+              if (sub$avprev[i] >= 0.1841305 && sub$avprev[i] < 0.4675766 && sub$effortRank[i] == 3) { # top middle
+                sub$comRank[i] <- 8}  
+              else { 
+                if (sub$avprev[i] < 0.1841305 && sub$effortRank[i] == 3) { # top right
+                  sub$comRank[i] <- 9}
+                else {
+                  sub$comRank[i] <- NA 
+                }}}}}}}}}}
+
+write.csv(sub, 'merge.csv')
