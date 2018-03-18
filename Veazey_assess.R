@@ -25,31 +25,73 @@ bv$avprev <- apply(bvsub, 1, mean, na.rm = TRUE) # Average prev data; equal weig
 ###### Part 1b ######
 
 summary(bv$avprev) # Basic descriptive stats for averaged prevalence metric
-# Also want to plot mean regional (admin2id) nodule_prev base v. avprev
+hist(bv$nodule_prev_base)
+hist(bv$avprev)
+wilcox.test(bv$nodule_prev_base, bv$avprev) # Two-sided Wilcoxon test
+
+# Reshape the data into tidy format for plotting
+library(tidyr)
+bvsub <- bv[, c(3, 9, 18)]
+bvNew <- bvsub %>% gather(attribute, value, -admin2id)
+head(bvNew)
+bvNew$admin2id <- as.character(bvNew$admin2id)
+# Plot mean regional (admin2id) nodule_prev_base v. avprev
+ggplot(bvNew, aes(admin2id, value)) + geom_bar(stat = 'identity', aes(fill = attribute)) + labs(title = 'Baseline and averaged river blindness prevalence in Burkina Faso, 1995-2005', x = 'Regional ID', y = 'Proportional prevalence') + scale_fill_manual(values = c('coral', 'navy'), name = 'Evaluation period', labels = c('2004-2005', 'Baseline: 1995-1998')) + theme(plot.title = element_text(hjust = 0.5))
 
 ###### Part 1c ######
 
+# Second plot: regional nodule_prev_base v. nodule_eval_prev & ov16_eval_prev
+bvsub2 <- bv[, c(3, 9, 13, 16)]
+bvNew2 <- bvsub2 %>% gather(attribute, value, -admin2id)
+head(bvNew2)
+bvNew2$admin2id <- as.character(bvNew2$admin2id)
+ggplot(bvNew2, aes(admin2id, value)) + geom_bar(stat = 'identity', aes(fill = attribute)) + labs(title = 'Baseline and updated river blindness prevalence in Burkina Faso, 1995-2005', x = 'Regional ID', y = 'Proportional prevalence') + scale_fill_manual(values = c('skyblue', 'navy', 'forestgreen'), name = 'Evaluation period', labels = c('2004-2005 (nodules)', 'Baseline: 1995-1998 (nodules)', '2004-2005 (antibodies)')) + theme(plot.title = element_text(hjust = 0.5))
+
+# Summary stats for baseline v. eval. data (2 types)
+summary(bv$nodule_prev_base)
+summary(bv$nodule_eval_prev)
+summary(bv$ov16_eval_prev)
 
 ###### Part 1e ######
-# Write function to simulate disease status for the population based on 2004-2005 data 
-require(deSolve) # package to help solve differential eqns
-SIR.model <- function(t, b, g) {
-  init <- c(S = 1-1e-9, I = 1e-9, R = 0) # Everyone is S (susceptible), infection (I) = avg. prev. in 2004 survey, recovery = 2004 prev-base prev
-  params <- c(beta = b, gamma = g) # transmission and recovery params
-  time <- seq(0, t, by = t/(2*length(1:t))) }
-  
-eqn <- function(time, state, params) {
-    with(as.list(c(state, params)), {
+
+# Write function to simulate disease status for the population based on 2004-2005 data; model structure adapted from https://github.com/eugejoh/SIR-interact 
+library(deSolve) # package to help solve differential eqns
+library(ggplot2)
+
+SIR.model <- function(t, b, g){
+  init <- c(S = .4554, I = .3313, R = .2133) # Avg. 33.13% measured infected; 54.46% (baseline nodule prev) - 33.31% = 21.33% recovered; 1 - 21.33 - 33.13 = 45.54% susceptible
+  params <- c(beta = b, gamma= g)
+  time <- seq(0, t ,by = t/(2*length(1:t)))
+  eqn <- function(time, state, params){
+    with(as.list(c(state, params)),{
       dS <- -beta*S*I
       dI <- beta*S*I-gamma*I
       dR <- gamma*I
-      return(list(c(dS,dI,dR))) } ) }
+      return(list(c(dS,dI,dR)))})}
+  vals <- ode(y = init,times = time,eqn,parms = params)
+  vals.df <- as.data.frame(vals)
+  title <- bquote('SIR Model: onchocerciasis prevalence 2004-2005')
+subtitle <- bquote(list(beta ==.(params[1]), ~gamma ==.(params[2])))
+res <- ggplot(vals.df, aes(x = time)) +
+  ggtitle(bquote(atop(bold(.(title)), atop(bold(.(subtitle)))))) +
+  geom_line(aes(y = S, color = 'Susceptible')) +
+  geom_line(aes(y = I, color = 'Infected')) +
+  geom_line(aes(y = R, color = 'Recovered')) +
+  ylab(label = 'Proportion of population') +
+  xlab(label = 'Time (days)') +
+  theme(legend.justification = c(1,0), legend.position = c(1,0)) +
+  theme(legend.title = element_text(size = 12, hjust = 0.5), plot.title = element_text(hjust = 0.5),
+        legend.background = element_rect(fill='#FFFFFF', size = 0.5, linetype = 'solid'),
+        legend.text = element_text(size = 10),
+        legend.key = element_rect(colour = '#FFFFFF', fill = '#C2C2C2', size = 0.25, linetype = 'solid')) +
+  scale_colour_manual('Onchocersiasis: health status',
+                      breaks = c('Susceptible', 'Infected', 'Recovered'),
+                      values = c('red', 'navy', 'forestgreen'))
+print(res)
+}
 
-# Save output as df
-output <- ode(y = init, times = time, eqn, parms = params)
-df <- as.data.frame(output)
+SIR.model(720, 0.0007, 1/3650) # Run for 2 years (720 days), beta = c*p = 0.1*0.007 = 0.0007, recovery time = 1/3650 days (10 yrs)
 
-  
 #######################################################################################################
 ###### Part 2, Q1a ######
 
