@@ -36,7 +36,7 @@ bvNew <- bvsub %>% gather(attribute, value, -admin2id)
 head(bvNew)
 bvNew$admin2id <- as.character(bvNew$admin2id)
 # Plot mean regional (admin2id) nodule_prev_base v. avprev
-ggplot(bvNew, aes(admin2id, value)) + geom_bar(stat = 'identity', aes(fill = attribute)) + labs(title = 'Baseline and averaged river blindness prevalence in Burkina Faso, 1995-2005', x = 'Regional ID', y = 'Proportional prevalence') + scale_fill_manual(values = c('coral', 'navy'), name = 'Evaluation period', labels = c('2004-2005', 'Baseline: 1995-1998')) + theme(plot.title = element_text(hjust = 0.5))
+ggplot(bvNew, aes(x = admin2id, y = value)) + stat_summary(fun.y ='mean', geom = 'bar', position = 'dodge', aes(fill = attribute)) + labs(title = 'Baseline and averaged river blindness prevalence in Burkina Faso, 1995-2005', x = 'Regional ID', y = 'Proportional prevalence') + scale_fill_manual(values = c('coral', 'navy'), name = 'Evaluation period', labels = c('2004-2005', 'Baseline: 1995-1998')) + theme(plot.title = element_text(hjust = 0.5))
 
 ###### Part 1c ######
 
@@ -45,7 +45,7 @@ bvsub2 <- bv[, c(3, 9, 13, 16)]
 bvNew2 <- bvsub2 %>% gather(attribute, value, -admin2id)
 head(bvNew2)
 bvNew2$admin2id <- as.character(bvNew2$admin2id)
-ggplot(bvNew2, aes(admin2id, value)) + geom_bar(stat = 'identity', aes(fill = attribute)) + labs(title = 'Baseline and updated river blindness prevalence in Burkina Faso, 1995-2005', x = 'Regional ID', y = 'Proportional prevalence') + scale_fill_manual(values = c('skyblue', 'navy', 'forestgreen'), name = 'Evaluation period', labels = c('2004-2005 (nodules)', 'Baseline: 1995-1998 (nodules)', '2004-2005 (antibodies)')) + theme(plot.title = element_text(hjust = 0.5))
+ggplot(bvNew2, aes(x = admin2id, y = value)) + stat_summary(fun.y ='mean', geom = 'bar', position = 'dodge', aes(fill = attribute)) + labs(title = 'Baseline and updated river blindness prevalence in Burkina Faso, 1995-2005', x = 'Regional ID', y = 'Proportional prevalence') + scale_fill_manual(values = c('skyblue', 'navy', 'forestgreen'), name = 'Evaluation period', labels = c('2004-2005 (nodules)', 'Baseline: 1995-1998 (nodules)', '2004-2005 (antibodies)')) + theme(plot.title = element_text(hjust = 0.5))
 
 # Summary stats for baseline v. eval. data (2 types)
 summary(bv$nodule_prev_base)
@@ -93,8 +93,15 @@ print(res)
 SIR.model(720, 0.0007, 1/3650) # Run for 2 years (720 days), beta = c*p = 0.1*0.007 = 0.0007, recovery time = 1/3650 days (10 yrs)
 
 #######################################################################################################
-###### Part 2, Q1a ######
-
-###### Part 2, Q1b ######
-
 ###### Part 2, Q2 ######
+names(mda)[names(mda) == 'ADMIN2ID'] = 'admin2id'
+bvmda <- merge(bv, mda, by = 'admin2id') # Note- only 34 unique IDs in mda
+# Subset bvmda to cov-only df (temp)
+covsub <- bvmda[,22:26]
+# Sum cov values 
+covsub$covsum <- rowSums(covsub, na.rm = TRUE)
+# Count number of non-NAs per row per df
+covsub$na_count <- apply(covsub, 1, function(x) sum(!is.na(x) - 1))
+covsub$non_na_count <- 5 - covsub$na_count 
+# Calculate mean cov per point
+covmn <- transform(covsub, covmn = covsum/non_na_count)
