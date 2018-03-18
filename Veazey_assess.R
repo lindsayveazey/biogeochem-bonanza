@@ -145,7 +145,7 @@ quantile(bvmda$avprev, na.rm=T)
 #        0%       25%       50%       75%      100% 
 # 0.0099010 0.1841305 0.2515845 0.4675766 0.8709677
 
-sub <- bvmda[ ,c(3:4, 18, 29)]
+sub <- bvmda[ ,c(4:5, 18, 29)]
 sub <- na.omit(sub) # 328 rows
 
 for (i in 1:nrow(sub)) {
