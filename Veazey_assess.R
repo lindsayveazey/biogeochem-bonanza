@@ -112,6 +112,7 @@ names(bvmda)[names(bvmda) == 'covmn$covmn'] = 'COV_MN'
 all <- merge(bvmda, mon, by = 'village_id') # 82 rows
 # Find villages that have shown an increase in avg prev from 2003 - 2005
 all$modchange <- all$avprev - all$skin_prev_monitor
+write.csv(all, 'change.csv')
 
 # Plot 2 is interpolation in ArcGis using avprev
 
