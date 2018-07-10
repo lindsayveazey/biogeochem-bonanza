@@ -1,9 +1,13 @@
 # START PYTHON: 
 /usr/bin/env python
+# or
+python
+# better:
+ipython
 # START JUPYTER: 
 jupyter notebook
-#################
-https://jupyter.readthedocs.io/en/latest/running.html#running 
+###########################################
+https://jupyter.readthedocs.io/en/latest/running.html # running 
 
 # Useful % operator specifications
 %s - String (or any object with a string representation, like numbers)
@@ -16,26 +20,26 @@ https://jupyter.readthedocs.io/en/latest/running.html#running
 
 %x/%X - Integers in hex representation (lowercase/uppercase)
 
-##########################
+###########################################
 for x in range(10):
     # Check if x is even
     if x % 2 == 0:
         continue # this skips the current block, like "continue on and ignore this"
     print(x)
 break # break is used to exit a for loop or a while loop
-########################
+###########################################
 
 def my_function_with_args(username, greeting):
     print("Hello, %s , From My Function!, I wish you %s"%(username, greeting))
 
 my_function_with_args("John Doe", "a great year!")
 
-#####################
+###########################################
 # HELP: Inside the () in a foreign function in ipynb, click Shift + Tab
 
 !pwd # current wd
 
-###################### tmux ##########
+################## tmux ###################
 
 tmux new # opens new tmux session
 # All commands in tmux require the prefix shortcut, which by default is ctrl+b
@@ -51,7 +55,7 @@ exit # to close
 
  source-file "/.tmux-themepack/powerline/block/cyan.tmuxtheme"
 
-################### Import csvs #######################
+############## Import csvs ################
 
 # Import pandas as pd
 import pandas as pd
@@ -62,7 +66,7 @@ cars = pd.read_csv('cars.csv')
 # Print out cars
 print(cars)
 
-################ Open .nc #########################
+################ Open .nc #################
 
 from pylab import *
 import netCDF4
@@ -71,12 +75,38 @@ f = netCDF4.MFDataset('/usgs/data2/rsignell/models/ncep/narr/air.2m.1989.nc')
 # print variables
 f.variables.keys()
 
-####################### Install tarball ################
-# Open terminal
+################ Install tarball ##########
+# Open termi
 cd \Downloads
 tar -xzvf seapy-0.2.1.tar.gz
 cd seapy-0.2.1
 python setup.py install
 # I had to open setup.py in the seapy dir and #comment out the README line
+# As of early 7/2018, there is an issue with the basemap dependency in matplot.lib that precludes proper local installation of seapy
+
+############## seapy notes ################
+
+# .rst files are ReStructuredText format. They look like text files, but can be rendered into HTML with the Python docutils package.
+
+### seapy/seapy/model ###
+
+grid = seapy.model.asgrid("grid_file.nc") # geared towards ROMS
+
+# hycom.py has a lot of good example scripts showing how to import and manipulate HYCOM data for use in ROMS
+# Same goes for soda.py (Simple Ocean Data Assimilation)- main vars include 3D Velocity, SST, Salinity, potential temperature, sea surface height, u, v current components, wind stress. Monthly timestep, 0.5 x 0.5 res (55,660 x 55,660 m)
+
+### seapy/seapy/roms ###
+
+# A CDL file is basically a text output from a netcdf file. If you want to know the contents of a netcdf file but don't have the time (or ability) to use programs built to read/write netcdf, you can use the simple text output of "ncdump" and then read/write it with a basic text editor.
+
+seapy.roms.analysis.constant_depth(temp, grid, depth = 100) # interpolates everything to a certain depth (finds the nearest depth layer; may not be exact)
+
+# Open ROMS info
+grid = seapy.model.asgrid(roms_file.nc)
+nc = seapy.netcdf(roms_file.nc)
+
+# boundary.py:  Given a ROMS history, average, or climatology file, generate boundary conditions on the same grid.
+
+# initial.py: generate initial conditions on the same grid.
 
 
