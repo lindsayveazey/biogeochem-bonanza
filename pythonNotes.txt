@@ -109,4 +109,6 @@ nc = seapy.netcdf(roms_file.nc)
 
 # initial.py: generate initial conditions on the same grid.
 
+## Note for 7/13- practice indexing via terminal, exploring seapy file sys using ipynb
+
 
