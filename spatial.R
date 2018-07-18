@@ -323,3 +323,37 @@ Kauai_ps <- writeRaster(Kauai_ps, 'Kauai_ps.flt', datatype = "FLT4s", overwrite 
 Kauai_tur <- resample(Kauai_tur, Kauai_null, method = 'ngb')
 Kauai_tur <- writeRaster(Kauai_tur, 'Kauai_tur.flt', datatype = "FLT4s", overwrite = T)
 
+
+### Create frac_hab flts
+
+# BI
+setwd('C:/Users/linds/Documents/HIReefSim/BI/FloatGrids')
+BI_frac_hab_tif <- 'soft.tif'
+BI_frac_hab_ras <- raster(BI_frac_hab_tif)
+BI_frac_hab_ras <- 100 - BI_frac_hab_ras 
+BI_frac_hab <- resample(BI_frac_hab_ras, BI_null, method = 'ngb')
+BI_frac_hab <- writeRaster(BI_frac_hab, 'BI_frac_hab.flt', datatype = "FLT4s", overwrite = T)
+
+# MNI
+setwd('C:/Users/linds/Documents/HIReefSim/MNI/FloatGrids')
+MNI_frac_hab_tif <- 'soft.tif'
+MNI_frac_hab_ras <- raster(MNI_frac_hab_tif)
+MNI_frac_hab_ras <- 100 - MNI_frac_hab_ras 
+MNI_frac_hab <- resample(MNI_frac_hab_ras, MNI_null, method = 'ngb')
+MNI_frac_hab <- writeRaster(MNI_frac_hab, 'MNI_frac_hab.flt', datatype = "FLT4s", overwrite = T)
+
+# Oahu
+setwd('C:/Users/linds/Documents/HIReefSim/Oahu/FloatGrids')
+Oahu_frac_hab_tif <- 'soft.tif'
+Oahu_frac_hab_ras <- raster(Oahu_frac_hab_tif)
+Oahu_frac_hab_ras <- 100 - Oahu_frac_hab_ras 
+Oahu_frac_hab <- resample(Oahu_frac_hab_ras, Oahu_null, method = 'ngb')
+Oahu_frac_hab <- writeRaster(Oahu_frac_hab, 'Oahu_frac_hab.flt', datatype = "FLT4s", overwrite = T)
+
+# Kauai
+setwd('C:/Users/linds/Documents/HIReefSim/Kauai/FloatGrids')
+Kauai_frac_hab_tif <- 'soft.tif'
+Kauai_frac_hab_ras <- raster(Kauai_frac_hab_tif)
+Kauai_frac_hab_ras <- 100 - Kauai_frac_hab_ras 
+Kauai_frac_hab <- resample(Kauai_frac_hab_ras, Kauai_null, method = 'ngb')
+Kauai_frac_hab <- writeRaster(Kauai_frac_hab, 'Kauai_frac_hab.flt', datatype = "FLT4s", overwrite = T)
