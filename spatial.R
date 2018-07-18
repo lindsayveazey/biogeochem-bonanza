@@ -204,3 +204,122 @@ dataType(Oahu_tur)
 dataType(Oahu_h)
 dataType(Oahu_ps)
 
+### Create urchin and large pisc nulls
+BI_null_ras <- BI_h_ras * 0
+MNI_null_ras <- MNI_h_ras * 0
+Oahu_null_ras <- Oahu_h_ras * 0
+Kauai_null_ras <- Kauai_h_ras * 0
+BI_null <- writeRaster(BI_null_ras, 'BI_null.flt', datatype = "FLT4s", overwrite = T)
+MNI_null <- writeRaster(MNI_null_ras, 'MNI_null.flt', datatype = "FLT4s", overwrite = T)
+Oahu_null <- writeRaster(Oahu_null_ras, 'Oahu_null.flt', datatype = "FLT4s", overwrite = T)
+Kauai_null <- writeRaster(Kauai_null_ras, 'Kauai_null.flt', datatype = "FLT4s", overwrite = T)
+
+
+### Resample all
+# Manually resampled null flts in ArcGIS...likely unnecessary...
+# Call them in again...
+
+# BI
+setwd('C:/Users/linds/Documents/HIReefSim/BI/FloatGrids')
+BI_null <- raster('BI_null.flt')
+res(BI_null) # 500x500, correct
+
+BI_cca <- resample(BI_cca, BI_null, method = 'ngb')
+BI_cca <- writeRaster(BI_cca, 'BI_cca.flt', datatype = "FLT4s", overwrite = T)
+
+BI_cor_s <- resample(BI_cor_s, BI_null, method = 'ngb')
+BI_cor_s <- writeRaster(BI_cor_s, 'BI_cor_s.flt', datatype = "FLT4s", overwrite = T)
+
+BI_cor_b <- resample(BI_cor_b, BI_null, method = 'ngb')
+BI_cor_b <- writeRaster(BI_cor_b, 'BI_cor_b.flt', datatype = "FLT4s", overwrite = T)
+
+BI_h <- resample(BI_h, BI_null, method = 'ngb')
+BI_h <- writeRaster(BI_h, 'BI_h.flt', datatype = "FLT4s", overwrite = T)
+
+BI_mac <- resample(BI_mac, BI_null, method = 'ngb')
+BI_mac <- writeRaster(BI_mac, 'BI_mac.flt', datatype = "FLT4s", overwrite = T)
+
+BI_ps <- resample(BI_ps, BI_null, method = 'ngb')
+BI_ps <- writeRaster(BI_ps, 'BI_ps.flt', datatype = "FLT4s", overwrite = T)
+
+BI_tur <- resample(BI_tur, BI_null, method = 'ngb')
+BI_tur <- writeRaster(BI_tur, 'BI_tur.flt', datatype = "FLT4s", overwrite = T)
+
+# MNI
+setwd('C:/Users/linds/Documents/HIReefSim/MNI/FloatGrids')
+MNI_null <- raster('MNI_null.flt')
+res(MNI_null) # 500x500, correct
+
+MNI_cca <- resample(MNI_cca, MNI_null, method = 'ngb')
+MNI_cca <- writeRaster(MNI_cca, 'MNI_cca.flt', datatype = "FLT4s", overwrite = T)
+
+MNI_cor_s <- resample(MNI_cor_s, MNI_null, method = 'ngb')
+MNI_cor_s <- writeRaster(MNI_cor_s, 'MNI_cor_s.flt', datatype = "FLT4s", overwrite = T)
+
+MNI_cor_b <- resample(MNI_cor_b, MNI_null, method = 'ngb')
+MNI_cor_b <- writeRaster(MNI_cor_b, 'MNI_cor_b.flt', datatype = "FLT4s", overwrite = T)
+
+MNI_h <- resample(MNI_h, MNI_null, method = 'ngb')
+MNI_h <- writeRaster(MNI_h, 'MNI_h.flt', datatype = "FLT4s", overwrite = T)
+
+MNI_mac <- resample(MNI_mac, MNI_null, method = 'ngb')
+MNI_mac <- writeRaster(MNI_mac, 'MNI_mac.flt', datatype = "FLT4s", overwrite = T)
+
+MNI_ps <- resample(MNI_ps, MNI_null, method = 'ngb')
+MNI_ps <- writeRaster(MNI_ps, 'MNI_ps.flt', datatype = "FLT4s", overwrite = T)
+
+MNI_tur <- resample(MNI_tur, MNI_null, method = 'ngb')
+MNI_tur <- writeRaster(MNI_tur, 'MNI_tur.flt', datatype = "FLT4s", overwrite = T)
+
+# Oahu
+setwd('C:/Users/linds/Documents/HIReefSim/Oahu/FloatGrids')
+Oahu_null <- raster('Oahu_null.flt')
+res(Oahu_null) # 500x500, correct
+
+Oahu_cca <- resample(Oahu_cca, Oahu_null, method = 'ngb')
+Oahu_cca <- writeRaster(Oahu_cca, 'Oahu_cca.flt', datatype = "FLT4s", overwrite = T)
+
+Oahu_cor_s <- resample(Oahu_cor_s, Oahu_null, method = 'ngb')
+Oahu_cor_s <- writeRaster(Oahu_cor_s, 'Oahu_cor_s.flt', datatype = "FLT4s", overwrite = T)
+
+Oahu_cor_b <- resample(Oahu_cor_b, Oahu_null, method = 'ngb')
+Oahu_cor_b <- writeRaster(Oahu_cor_b, 'Oahu_cor_b.flt', datatype = "FLT4s", overwrite = T)
+
+Oahu_h <- resample(Oahu_h, Oahu_null, method = 'ngb')
+Oahu_h <- writeRaster(Oahu_h, 'Oahu_h.flt', datatype = "FLT4s", overwrite = T)
+
+Oahu_mac <- resample(Oahu_mac, Oahu_null, method = 'ngb')
+Oahu_mac <- writeRaster(Oahu_mac, 'Oahu_mac.flt', datatype = "FLT4s", overwrite = T)
+
+Oahu_ps <- resample(Oahu_ps, Oahu_null, method = 'ngb')
+Oahu_ps <- writeRaster(Oahu_ps, 'Oahu_ps.flt', datatype = "FLT4s", overwrite = T)
+
+Oahu_tur <- resample(Oahu_tur, Oahu_null, method = 'ngb')
+Oahu_tur <- writeRaster(Oahu_tur, 'Oahu_tur.flt', datatype = "FLT4s", overwrite = T)
+
+# Kauai
+setwd('C:/Users/linds/Documents/HIReefSim/Kauai/FloatGrids')
+Kauai_null <- raster('Kauai_null.flt')
+res(Kauai_null) # 500x500, correct
+
+Kauai_cca <- resample(Kauai_cca, Kauai_null, method = 'ngb')
+Kauai_cca <- writeRaster(Kauai_cca, 'Kauai_cca.flt', datatype = "FLT4s", overwrite = T)
+
+Kauai_cor_s <- resample(Kauai_cor_s, Kauai_null, method = 'ngb')
+Kauai_cor_s <- writeRaster(Kauai_cor_s, 'Kauai_cor_s.flt', datatype = "FLT4s", overwrite = T)
+
+Kauai_cor_b <- resample(Kauai_cor_b, Kauai_null, method = 'ngb')
+Kauai_cor_b <- writeRaster(Kauai_cor_b, 'Kauai_cor_b.flt', datatype = "FLT4s", overwrite = T)
+
+Kauai_h <- resample(Kauai_h, Kauai_null, method = 'ngb')
+Kauai_h <- writeRaster(Kauai_h, 'Kauai_h.flt', datatype = "FLT4s", overwrite = T)
+
+Kauai_mac <- resample(Kauai_mac, Kauai_null, method = 'ngb')
+Kauai_mac <- writeRaster(Kauai_mac, 'Kauai_mac.flt', datatype = "FLT4s", overwrite = T)
+
+Kauai_ps <- resample(Kauai_ps, Kauai_null, method = 'ngb')
+Kauai_ps <- writeRaster(Kauai_ps, 'Kauai_ps.flt', datatype = "FLT4s", overwrite = T)
+
+Kauai_tur <- resample(Kauai_tur, Kauai_null, method = 'ngb')
+Kauai_tur <- writeRaster(Kauai_tur, 'Kauai_tur.flt', datatype = "FLT4s", overwrite = T)
+
