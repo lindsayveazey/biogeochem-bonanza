@@ -28,7 +28,4 @@ Please see the following detailed walkthrough to create IDU layer:
 
 13. (Merge) L + RW merge polygons = 'ISLAND_IDU.shp'
 
-## NOTES ## 
-
--Spatial Join and Near DO NOT WORK between polygrid and land polygon. Convert polygrid to points. Spatial Join tool to join points (with Near attributes) to polygrid; this crashed 3 times, but eventually was successful ('Dist_coast' column) 
-
+14. (Near) 'ISLAND_IDU.shp' and 'L' polygon; = 'Dist_Coast' column (note that Spatial Join and Near DO NOT WORK between polygrid and land polygon)
