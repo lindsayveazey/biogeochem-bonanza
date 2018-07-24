@@ -1,0 +1,34 @@
+This polygrid was created by merging the land-only polygons from the NOAA Biogeography repository with a 500 m^2 fishnet. 
+
+Please see the following detailed walkthrough to create IDU layer: 
+
+1. Convert one of the FLT rasters to Int raster (Float to Raster) 
+
+2. Convert Int raster to Polygon (Raster to Polygon) (do NOT simplify polygons; do NOT delete)
+
+3. Create expanded fishnet (make sure projections are aligned by manually defining extent)
+
+4. Use lasso by rectangle to export island-by-island subsets of the polygon
+
+5. (Editor) Spatially adjust island-specific fishnet to island-specific polygon
+
+6. (Clip) Clip polygrid to reef polygon ; "R" polygrid 
+
+7. (Buffer) create 5000 m buffer polygon around island-specific land polygon
+
+8. (Clip) Clip polygrid to buffer polygon; "W" polygrid 
+
+9. Add 'IDU_Type' as text field to each polygon attribute table ('L', 'R', or 'W')
+
+10. (Merge) R + W polygrids
+
+11. (Erase) Erase reef/water overlap using land polygon overlay
+
+12. (Merge) L + RW merge polygons
+
+13. Join raster-to-point bathy data with R + L + W polygon ('Elev_mean') 
+
+## NOTES ## 
+
+-Spatial Join and Near DO NOT WORK between polygrid and land polygon. Convert polygrid to points. Spatial Join tool to join points (with Near attributes) to polygrid; this crashed 3 times, but eventually was successful ('Dist_coast' column) 
+
