@@ -24,9 +24,9 @@ Please see the following detailed walkthrough to create IDU layer:
 
 11. (Erase) Erase reef/water overlap using land polygon overlay
 
-12. (Merge) L + RW merge polygons
+12.  Join (closest to boundary) raster-to-point bathy data with R + W polygon (these values * -1 will be 'ELEV_MEAN' column in IDU layer) 
 
-13. Join raster-to-point bathy data with R + L + W polygon ('Elev_mean') 
+13. (Merge) L + RW merge polygons = 'ISLAND_IDU.shp'
 
 ## NOTES ## 
 
