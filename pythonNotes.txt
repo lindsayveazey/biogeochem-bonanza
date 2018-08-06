@@ -76,7 +76,7 @@ f = netCDF4.MFDataset('/usgs/data2/rsignell/models/ncep/narr/air.2m.1989.nc')
 f.variables.keys()
 
 ################ Install tarball ##########
-# Open termi
+# Open terminal
 cd \Downloads
 tar -xzvf seapy-0.2.1.tar.gz
 cd seapy-0.2.1
