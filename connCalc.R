@@ -477,7 +477,7 @@ for (i in 1:nrow(BImod7)) {
 
 (nrow(subset(Kauaimod6, Kauaimod6$settle == 7))) / nrow(Kauaimod6) # 7
 
-# col 7: NEAR_FID = 8
+# col 8: NEAR_FID = 7
 
 (nrow(subset(Kauaimod7, Kauaimod7$settle == 0))) / nrow(Kauaimod7) # 0
 
@@ -624,7 +624,7 @@ for (i in 1:nrow(BImod7)) {
 
 (nrow(subset(Oahumod6, Oahumod6$settle == 7))) / nrow(Oahumod6) # 7
 
-# col 7: NEAR_FID = 8
+# col 8: NEAR_FID = 7
 
 (nrow(subset(Oahumod7, Oahumod7$settle == 0))) / nrow(Oahumod7) # 0
 
@@ -772,7 +772,7 @@ for (i in 1:nrow(BImod7)) {
 
 (nrow(subset(MNImod6, MNImod6$settle == 7))) / nrow(MNImod6) # 7
 
-# col 7: NEAR_FID = 8
+# col 8: NEAR_FID = 7
 
 (nrow(subset(MNImod7, MNImod7$settle == 0))) / nrow(MNImod7) # 0
 
@@ -919,7 +919,7 @@ for (i in 1:nrow(BImod7)) {
 
 (nrow(subset(BImod6, BImod6$settle == 7))) / nrow(BImod6) # 7
 
-# col 7: NEAR_FID = 8
+# col 8: NEAR_FID = 7
 
 (nrow(subset(BImod7, BImod7$settle == 0))) / nrow(BImod7) # 0
 
