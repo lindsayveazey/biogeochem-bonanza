@@ -181,8 +181,56 @@ Hout(idUsms) == F       ! sustr              surface U-stress
 ################## how to run the model on frinkiac #################
 
 # Run this model on as many processors as possible
-# In Brian's cluster, we have default (15 nodes, 8 cores each) & F2 (4 nodes, 16 cores each; a little faster as it's newer)
+# In Brian's cluster, we have default (15 nodes, 8 cores each) & F1 (4 nodes, 16 cores each; a little faster as it's newer)
 
 On the queue, cmd line, we care about 2 commands-
 
 qstat # tells us what is running
+qdel [a number] # deletes job [a number] frpom the queue, if you've made an error
+qexec -N [name that appears in cluster] - P [number of cores] - Q [default or F1]  python myscript.py # Usually P and Q are not noted. Here, "python myscript.py" is just any sort of Unix-based command for anything.
+
+# There are 2 ways to run something. The most common way is to use cycle_roms. A second way is to use a script called romsexec. 
+
+### cycle_roms lets multiple people use the queue. I can set a cycle to run for 30 days, then once that timestep is completed, it sets up for the next 30 days and gets in line again.
+
+# To use cycle_roms, type "cycle_roms spinup.sh" ...then we check the queue now and again to see how it's doing
+
+# Within spinup.sh (don't edit any of this):
+
+ROMS_RUN_NAME="HIOEKG Testing"
+ROMS_EXEC=${PBS_O_WORKDIR}/oceanM # WORKDIR is the queue
+ROMS_INPUT=${PBS_O_WORKDIR}/ocean.in # Which input file to use?
+ROMS_FAIL_INPUT=${PBS_O_WORKDIR}/ocean-fail.in # set this to 0 soemtime...
+ROMS_START_DAY=6744 
+ROMS_END_DAY=6751
+ROMS_WORK_DIR=${PBS_O_WORKDIR}/work
+ROMS_OUT_DIR=${PBS_O_WORKDIR}/output # where it's putting the files, it has to wipe the other dir and prep for next run
+ROMS_RUN_DAYS=7 
+ROMS_EPOCH=2000 
+ROMS_EPOCH_YEARDAY=0
+ROMS_QUEUE="nodes=4:ppn=16" # It uses all the processors on a given node
+ROMS_QUEUE_NAME="F1" 
+ROMS_USE_RESTART=1 # Almost always leave it at 1. When it goes to the next cycle, it will look for a restart file. This is generated when the cycle ends. It's the same as a history file, but it saves for information. 
+ROMS_PRE_SCRIPT= # This and the next can be important. Here, we may not have a valid .nc for each cycle. This allows us to load a different file for some runs if needed.
+ROMS_POST_SCRIPT= # May need to do some post processing before starting next file. Rarely used.
+ROMS_POST_BACKGROUND_SCRIPT= # Run when cycle ends. Submitted to the queue independently. i.e., we have a script to generate a statistic about the cycle while the new cycle runs (likely not going to use).
+
+
+
+
+
+### romsexec -h tells me my options...
+ -e executable [oceanM]
+ -i input [ocean.in]
+ -n name [ROMSEXEC]
+ -q queue name [default]
+ -w {wait} [off]
+ -s {silent} [off] 
+
+# If I use romsexec, my ocean.in better be set up perfectly. cycle_roms is a little easier- it figures out things for you, like boundary conditions, forcings..
+
+cd /share/frinkraid2/lindsayv/hioekg-template/output
+
+cp /share/frinkraid2/dalep3/pacioos/hioekg-nlm-waves/ini.nc
+
+
