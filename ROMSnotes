@@ -229,8 +229,18 @@ ROMS_POST_BACKGROUND_SCRIPT= # Run when cycle ends. Submitted to the queue indep
 
 # If I use romsexec, my ocean.in better be set up perfectly. cycle_roms is a little easier- it figures out things for you, like boundary conditions, forcings..
 
-cd /share/frinkraid2/lindsayv/hioekg-template/output
+mkdir output
+cd /share/frinkraid2/lindsayv/hioekg-template/output # created an output directory, nav in
 
-cp /share/frinkraid2/dalep3/pacioos/hioekg-nlm-waves/ini.nc
+cp /share/frinkraid2/dalep3/pacioos/hioekg-nlm-waves/ini.nc # copied dale's files into this dir
+
+cd /share/frinkraid2/lindsayv/hioekg-template/ # nav out
+
+cycle_roms -d spinup.sh # dry run
+
+uvp tsp splines psource
+
+cd /share/frinkraid2/lindsayv/hioekg-template/work
+ls # I see 4 files:  ini.nc  irp.nc  ocean.in  varinfo.dat
 
 
