@@ -18,14 +18,14 @@ hioekg.h
 
 *include/ : used for code customization; FORTRAN code
 
-ocean.in - at the bottom there are glossary terms, as needed if I don't know what a variable does
+ocean.in - at the bottom there are glossary terms, as needed if I don't know what a variable does. sets all params
 
 roms_config.sh : compiling code (rmake utility; wrapper for make; it loads the roms_config.sh file and loads it)
 
 spinup.sh
 
 
-*optional
+*optional, we aren't using it
 
 # to pull changes: git pull in roms/src
 
@@ -96,3 +96,93 @@ LtracerSponge == F F                            ! temperature, salinity, inert
   TIDE_START =  6575.0d0                      ! days # we need a file that tells us about the amplitude and phase of the tides. We say, ok, I'll set all my phases relative to day 6575 (arbitrary day)
     TIME_REF =  20000101.0d0                      ! yyyymmdd.dd
 
+# This is all for having a point source (in our case, rivers):
+
+! Logical switches (TRUE/FALSE) to activate horizontal momentum transport
+! point Sources/Sinks (like river runoff transport) and mass point
+! Sources/Sinks (like volume vertical influx), [1:Ngrids].
+
+      LuvSrc == T                          ! horizontal momentum transport
+       LwSrc == F                          ! volume vertical influx
+
+! Logical switches (TRUE/FALSE) to activate tracers point Sources/Sinks
+! (like river runoff) and to specify which tracer variables to consider:
+! [1:NAT+NPT,Ngrids].  See glossary below for details.
+
+  LtracerSrc == F T                        ! temperature, salinity, inert # tells model that I am loading a file w salinity and vel
+
+
+# We might want to think about this at some point...
+
+
+! Logical switches (TRUE/FALSE) to activate writing of fields into
+! HISTORY output file.
+
+Hout(idUvel) == T       ! u                  3D U-velocity
+Hout(idVvel) == T       ! v                  3D V-velocity
+Hout(idu3dE) == F       ! u_eastward         3D U-eastward  at RHO-points
+Hout(idv3dN) == F       ! v_northward        3D V-northward at RHO-points
+Hout(idWvel) == T       ! w                  3D W-velocity
+Hout(idOvel) == T       ! omega              omega vertical velocity
+Hout(idUbar) == T       ! ubar               2D U-velocity
+Hout(idVbar) == T       ! vbar               2D V-velocity
+Hout(idu2dE) == F       ! ubar_eastward      2D U-eastward  at RHO-points
+Hout(idv2dN) == F       ! vbar_northward     2D V-northward at RHO-points
+Hout(idFsur) == T       ! zeta               free-surface
+Hout(idBath) == F       ! bath               time-dependent bathymetry
+
+Hout(idTvar) == T T     ! temp, salt         temperature and salinity
+
+Hout(idpthR) == F       ! z_rho              time-varying depths of RHO-points
+Hout(idpthU) == F       ! z_u                time-varying depths of U-points
+Hout(idpthV) == F       ! z_v                time-varying depths of V-points
+Hout(idpthW) == F       ! z_w                time-varying depths of W-points
+
+Hout(idUsms) == F       ! sustr              surface U-stress
+
+# Brian says "I would turn off some of these ^ things, like w and omega"
+
+# Always save the prognostic (needed) variables: zeta, ubar, vbar, u, v, temp, salt 
+
+
+### "here's the important stuff...heavy lifting"
+
+! Input NetCDF file names, [1:Ngrids].
+
+     GRDNAME == /share/frinkraid2/dalep3/pacioos/hioekg-nlm-waves/hioekg-grid.nc # defines lat, long, bty etc. Can use python or ncview to examine.
+     ININAME == ini.nc # Initial conditions to run with
+     ITLNAME == itl.nc 
+     IRPNAME == irp.nc
+     IADNAME == iad.nc
+     FWDNAME == fwd.nc
+     ADSNAME == ads.nc
+
+
+# 
+! Input lateral boundary conditions and climatology file names.  The
+! USER has the option to split input data time records into several
+! NetCDF files (see prologue instructions above). If so, use a single
+! line per entry with a vertical bar (|) symbol after each entry,
+! except the last one.
+
+     BRYNAME == /share/frinkraid2/dalep3/pacioos/hioekg-nlm-waves/hioekg-bry.nc # boundary conditions
+     CLMNAME == /share/frinkraid2/dalep3/pacioos/hioekg-nlm-waves/hioekg-clim.nc # climatology (seapy auto generates this; 'this is what the outer model says for your grid'); keeps the model from deviating from the climatology, but not needed (not turned on currently)
+
+
+! Input climatology nudging coefficients file name.
+
+     NUDNAME == ocean_nud.nc # what is the timescale to restore toward climatology (larger = looser)
+
+
+! Output NetCDF file names, [1:Ngrids]. # not everything in the list below will be created
+
+#   BPARNAM =  bio_Fennel.in # this will be the cobalt.in file (Lisa has done this)
+
+################## how to run the model on frinkiac #################
+
+# Run this model on as many processors as possible
+# In Brian's cluster, we have default (15 nodes, 8 cores each) & F2 (4 nodes, 16 cores each; a little faster as it's newer)
+
+On the queue, cmd line, we care about 2 commands-
+
+qstat # tells us what is running
