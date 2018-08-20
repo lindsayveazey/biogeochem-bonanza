@@ -1,5 +1,5 @@
 ########### ROMS workflow ###########
-# See documentation on roms.org
+# See documentation on myroms.org
 
 pwd # check wd
 ssh frinkiac  # connect to cluster on Linux 
