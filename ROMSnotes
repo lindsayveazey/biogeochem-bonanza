@@ -1,88 +1,71 @@
-to pull changes- 
+########### ROMS workflow ###########
+# See documentation on roms.org
 
-git pull in roms/src
+pwd # check wd
+ssh frinkiac  # connect to cluster on Linux 
+# ssh -Y lindsayv@frinkiac.soest.hawaii.edu # connect to cluster on Windows laptop
+ls # check files
 
-/share/frinkraid2/lindsayv/hioekg-template
+### This is a walkthrough of my tutorial with B & T 8/16 ###
+# ls /share/frinkraid/powellb/pacioos  # BP's dir
+# cp -r /share/frinkraid/powellb/pacioos/hioekg-template .  # copy this folder to my dir
+# mkdir roms
+cd ./roms  # The ./folder notation abbreviates my typing
+# git clone ~powellb/roms/src  # Cloned BP's repo
+cd ./src
+git pull  # Updates /roms/src
+cd /share/frinkraid2/lindsayv/
+## UNSURE about this part- how did we get /hioekg-template? Ask T
+#? mkdir hioekg-template 
+#? cd ./hioekg-template
+#? rmake -j2  # Will generate oceanM* file- this is what I submit to the queue. This is a wrapper for 'make'; it loads the roms_config.sh file
 
-nc_config tells fortran compiler where things are located
+# ls  # There are several items here:
+	# 1. nc_config: tells Fortran compiler where things are located
+	# 2. ocean.in: sets all parameters. At the bottom there are glossary terms, as needed if I don't know what a variable does
+	# 3. include/ : used for code customization; Fortran code
+	# 4. roms_config.sh: compiles code; rmake loads it
+	# 5. spinup.sh:
 
-rmake -j2 in the hioekg-template dir
-
-# will generate oceanM file- this is what you submit to the queue
-
-# look at roms/src/ROMS/Include/cppdefs.h
-
-
-
-hioekg.h
-
-*include/ : used for code customization; FORTRAN code
-
-ocean.in - at the bottom there are glossary terms, as needed if I don't know what a variable does. sets all params
-
-roms_config.sh : compiling code (rmake utility; wrapper for make; it loads the roms_config.sh file and loads it)
-
-spinup.sh
-
-
-*optional, we aren't using it
-
-# to pull changes: git pull in roms/src
-
-/share/frinkraid2/lindsayv/hioekg-template # important things
-
-# nc_config tells fortran compiler where things are located
-
-# rmake -j2 in the hioekg-template dir; will generate oceanM file- this is what you submit to the queue
-
-# look at roms/src/ROMS/Include/cppdefs.h
-
-### In ocean.in:
+### ocean.in notes:
 
 # VARNAME in ocean.in should be set to a specific dir if it isn't in the hioekg-template dir.
 
 # If we update a file, go into the hioekg-template dir and then type rmake. It will recompile.
 
-# grid has 188 in the I direction, 88 in the J direction. I is divided into 8 sections, and J is divided into 8 sections.
+# The grid has 188 in the I direction, 88 in the J direction. I is divided into 8 sections, and J is divided into 8 sections.
 
-# ! Time-Stepping parameters.
-
-      NTIMES == 720 # never touch this
-          DT == 10.0d0 # largest possible value to use that keeps the model stable. this is the baroclinic timestep. Brian said "this seems low" and he would put it higher
-     NDTFAST == 44 # barotopic mode- how many times do you want to run the barotopic mode for every one timestep in DT? here, this is a 10/44 sec = one quarter second timestep for the barotropic. Brian said "this seems really high"
+## Time-Stepping parameters:
+	# NTIMES == 720 # never touch this
+        # DT == 10.0d0 # largest possible value to use that keeps the model stable. this is the baroclinic timestep. Brian said "this seems low" and he would put it higher
+        # NDTFAST == 44 # barotopic mode- how many times do you want to run the barotopic mode for every one timestep in DT? here, this is a 10/44 sec = one quarter second timestep for the barotropic. Brian said "this seems really high"
 
 # Once we get the model running, can we increase DT and increase NDTFAST?
 
 # We can compute NDTFAST = sqrt(gH). We have both g and H. 
 
 
-# ! Output history, quicksave, average, and diagnostic files parameters.
-
-        NHIS == 360  # This says every 3600 seconds (we have a 10 sec timestep), we save a snapshot of the model. We care more about historys than avgs.
- 	NAVG == 8640 # * 10 sec timestep = we get avgs every 86400 sec, or each day. Cumulative avgs.
-
-
-# ! Harmonic/biharmonic horizontal diffusion of tracer for nonlinear model
-! and adjoint-based algorithms: [1:NAT+NPT,Ngrids].
-
-        TNU2 == 35.0d0  35.0d0                    ! m2/s # Brian says seems high 
-# ! Harmonic/biharmonic, horizontal viscosity coefficient for nonlinear model
-! and adjoint-based algorithms: [Ngrids].
-
-       VISC2 == 50.0d0                           ! m2/s # "Seems high"
-
-# Precludes boundary issue problems...just leave alone, but here it is...
-# ! Logical switches (TRUE/FALSE) to increase/decrease horizontal viscosity
-! and/or diffusivity in specific areas of the application domain (like
-! sponge areas) for the desired application grid.
-
-    LuvSponge == F                              ! horizontal momentum
-LtracerSponge == F F                            ! temperature, salinity, inert
+## Output history, quicksave, average, and diagnostic files parameters.
+	# NHIS == 360  # This says every 3600 seconds (we have a 10 sec timestep), we save a snapshot of the model. We care more about historys than avgs.
+ 	# NAVG == 8640 # * 10 sec timestep = we get avgs every 86400 sec, or each day. Cumulative avgs.
 
 
-# **** documentation on roms.org ****
+## Harmonic/biharmonic horizontal diffusion of tracer for nonlinear model and adjoint-based algorithms: [1:NAT+NPT,Ngrids]:
 
-# ! Vertical S-coordinates parameters (see below for details), [1:Ngrids].
+        # TNU2 == 35.0d0  35.0d0                    ! m2/s # Brian says seems high 
+
+## Harmonic/biharmonic, horizontal viscosity coefficient for nonlinear model:
+
+        # VISC2 == 50.0d0                           ! m2/s # "Seems high"
+
+
+## Logical switches (TRUE/FALSE) to increase/decrease horizontal viscosity: precludes boundary issue problems...just leave alone, but here it is:
+
+	# LuvSponge == F                                 ! horizontal momentum
+	# LtracerSponge == F F                           ! temperature, salinity, inert
+
+
+## ! Vertical S-coordinates parameters (see below for details), [1:Ngrids].
 
      THETA_S == 7.0d0                      ! surface stretching parameter 
      THETA_B == 0.5d0                      ! bottom  stretching parameter
