@@ -4,6 +4,7 @@ rm(list=ls())
 setwd('C:/Users/linds/Documents/HIReefSim')
 list.files()
 BI <- read.csv('BI_ConnPts.csv')
+MNI <- read.cav('MNI_ConnPts.csv')
 Oahu <- read.csv('Oahu_ConnPts.csv')
 Kauai <- read.csv('Kauai_ConnPts.csv')
 mod <- read.csv('modOut.csv')
@@ -11,6 +12,7 @@ mod[1] <- lapply(mod[1], as.integer)
 
 # Merge files by site number
 BImod <- merge(mod, BI, by = 'habitat_pi')
+MNImod <- merge(mod, MNI, by = 'habitat_pi')
 Oahumod <- merge(mod, Oahu, by = 'habitat_pi')
 Kauaimod <- merge(mod, Kauai, by = 'habitat_pi')
 
@@ -19,7 +21,8 @@ mod2 <- mod
 names(mod2)[names(mod2) == 'habitat_pi'] <- 'habitat_pi_orig'
 names(mod2)[names(mod2) == 'site_settled'] <- 'habitat_pi'
 
-mod2 <- merge(mod2, BI, by = 'habitat_pi')
+# MNI (example)
+mod2 <- merge(mod2, MNI, by = 'habitat_pi')
 names(mod2)[names(mod2) == 'habitat_pi'] <- 'site_settled'
 mod2$settle_NEAR_ID <- mod2$NEAR_FID
 cols <- c(1,11)
@@ -30,6 +33,7 @@ mod2 <- unique(mod2)
 
 # Merge settlement NEAR_FID data w other merges
 BImod <- merge(BImod, mod2, by = 'site_settled')
+MNImod <- merge(MNImod, mod2, by = 'site_settled')
 Oahumod <- merge(Oahumod, mod2, by = 'site_settled')
 Kauaimod <- merge(Kauaimod, mod2, by = 'site_settled')
 
@@ -186,6 +190,84 @@ for (i in 1:nrow(Oahumod7)) {
     Oahumod7$settle[i] = "100"} # self-seeding
   else { 
     Oahumod7$settle[i] = Oahumod7$settle_NEAR_ID[i]}
+}
+
+
+##############################################################
+########## MNI: subset by NEAR_FID (polygon segment) ########## 
+
+MNImod0 <- subset(MNImod, MNImod$NEAR_FID == 0)
+MNImod1 <- subset(MNImod, MNImod$NEAR_FID == 1)
+MNImod2 <- subset(MNImod, MNImod$NEAR_FID == 2)
+MNImod3 <- subset(MNImod, MNImod$NEAR_FID == 3)
+MNImod4 <- subset(MNImod, MNImod$NEAR_FID == 4)
+MNImod5 <- subset(MNImod, MNImod$NEAR_FID == 5)
+MNImod6 <- subset(MNImod, MNImod$NEAR_FID == 6)
+MNImod7 <- subset(MNImod, MNImod$NEAR_FID == 7)
+
+### Loop through
+# MNImod0
+for (i in 1:nrow(MNImod0)) {
+  if (MNImod0$NEAR_FID[i] == MNImod0$settle_NEAR_ID[i]) {
+    MNImod0$settle[i] = "100"} # self-seeding
+  else { 
+    MNImod0$settle[i] = MNImod0$settle_NEAR_ID[i]}
+}
+
+# MNImod1
+for (i in 1:nrow(MNImod1)) {
+  if (MNImod1$NEAR_FID[i] == MNImod1$settle_NEAR_ID[i]) {
+    MNImod1$settle[i] = "100"} # self-seeding
+  else { 
+    MNImod1$settle[i] = MNImod1$settle_NEAR_ID[i]}
+}
+
+# MNImod2
+for (i in 1:nrow(MNImod2)) {
+  if (MNImod2$NEAR_FID[i] == MNImod2$settle_NEAR_ID[i]) {
+    MNImod2$settle[i] = "100"} # self-seeding
+  else { 
+    MNImod2$settle[i] = MNImod2$settle_NEAR_ID[i]}
+}
+
+# MNImod3
+for (i in 1:nrow(MNImod3)) {
+  if (MNImod3$NEAR_FID[i] == MNImod3$settle_NEAR_ID[i]) {
+    MNImod3$settle[i] = "100"} # self-seeding
+  else { 
+    MNImod3$settle[i] = MNImod3$settle_NEAR_ID[i]}
+}
+
+# MNImod4
+for (i in 1:nrow(MNImod4)) {
+  if (MNImod4$NEAR_FID[i] == MNImod4$settle_NEAR_ID[i]) {
+    MNImod4$settle[i] = "100"} # self-seeding
+  else { 
+    MNImod4$settle[i] = MNImod4$settle_NEAR_ID[i]}
+}
+
+# MNImod5
+for (i in 1:nrow(MNImod5)) {
+  if (MNImod5$NEAR_FID[i] == MNImod5$settle_NEAR_ID[i]) {
+    MNImod5$settle[i] = "100"} # self-seeding
+  else { 
+    MNImod5$settle[i] = MNImod5$settle_NEAR_ID[i]}
+}
+
+# MNImod6
+for (i in 1:nrow(MNImod6)) {
+  if (MNImod6$NEAR_FID[i] == MNImod6$settle_NEAR_ID[i]) {
+    MNImod6$settle[i] = "100"} # self-seeding
+  else { 
+    MNImod6$settle[i] = MNImod6$settle_NEAR_ID[i]}
+}
+
+# MNImod7
+for (i in 1:nrow(MNImod7)) {
+  if (MNImod7$NEAR_FID[i] == MNImod7$settle_NEAR_ID[i]) {
+    MNImod7$settle[i] = "100"} # self-seeding
+  else { 
+    MNImod7$settle[i] = MNImod7$settle_NEAR_ID[i]}
 }
 
 
@@ -395,7 +477,7 @@ for (i in 1:nrow(BImod7)) {
 
 (nrow(subset(Kauaimod6, Kauaimod6$settle == 7))) / nrow(Kauaimod6) # 7
 
-# col 7: NEAR_FID = 8
+# col 8: NEAR_FID = 7
 
 (nrow(subset(Kauaimod7, Kauaimod7$settle == 0))) / nrow(Kauaimod7) # 0
 
@@ -542,7 +624,7 @@ for (i in 1:nrow(BImod7)) {
 
 (nrow(subset(Oahumod6, Oahumod6$settle == 7))) / nrow(Oahumod6) # 7
 
-# col 7: NEAR_FID = 8
+# col 8: NEAR_FID = 7
 
 (nrow(subset(Oahumod7, Oahumod7$settle == 0))) / nrow(Oahumod7) # 0
 
@@ -559,3 +641,298 @@ for (i in 1:nrow(BImod7)) {
 (nrow(subset(Oahumod7, Oahumod7$settle == 6))) / nrow(Oahumod7) # 6
 
 (nrow(subset(Oahumod7, Oahumod7$settle == 100))) / nrow(Oahumod7) # self
+
+#######################################################################
+
+
+# Calculate probabilities: MNI
+# col 1: NEAR_FID = 0
+
+(nrow(subset(MNImod0, MNImod0$settle == 100))) / nrow(MNImod0) # self
+
+(nrow(subset(MNImod0, MNImod0$settle == 1))) / nrow(MNImod0) # 1
+
+(nrow(subset(MNImod0, MNImod0$settle == 2))) / nrow(MNImod0) # 2
+
+(nrow(subset(MNImod0, MNImod0$settle == 3))) / nrow(MNImod0) # 3
+
+(nrow(subset(MNImod0, MNImod0$settle == 4))) / nrow(MNImod0) # 4
+
+(nrow(subset(MNImod0, MNImod0$settle == 5))) / nrow(MNImod0) # 5
+
+(nrow(subset(MNImod0, MNImod0$settle == 6))) / nrow(MNImod0) # 6
+
+(nrow(subset(MNImod0, MNImod0$settle == 7))) / nrow(MNImod0) # 7
+
+# col 2: NEAR_FID = 1
+
+(nrow(subset(MNImod1, MNImod1$settle == 0))) / nrow(MNImod1) # 0
+
+(nrow(subset(MNImod1, MNImod1$settle == 100))) / nrow(MNImod1) # self
+
+(nrow(subset(MNImod1, MNImod1$settle == 2))) / nrow(MNImod1) # 2
+
+(nrow(subset(MNImod1, MNImod1$settle == 3))) / nrow(MNImod1) # 3
+
+(nrow(subset(MNImod1, MNImod1$settle == 4))) / nrow(MNImod1) # 4
+
+(nrow(subset(MNImod1, MNImod1$settle == 5))) / nrow(MNImod1) # 5
+
+(nrow(subset(MNImod1, MNImod1$settle == 6))) / nrow(MNImod1) # 6
+
+(nrow(subset(MNImod1, MNImod1$settle == 7))) / nrow(MNImod1) # 7
+
+# col 3: NEAR_FID = 2
+
+(nrow(subset(MNImod2, MNImod2$settle == 0))) / nrow(MNImod2) # 0
+
+(nrow(subset(MNImod2, MNImod2$settle == 1))) / nrow(MNImod2) # 1
+
+(nrow(subset(MNImod2, MNImod2$settle == 100))) / nrow(MNImod2) # self
+
+(nrow(subset(MNImod2, MNImod2$settle == 3))) / nrow(MNImod2) # 3
+
+(nrow(subset(MNImod2, MNImod2$settle == 4))) / nrow(MNImod2) # 4
+
+(nrow(subset(MNImod2, MNImod2$settle == 5))) / nrow(MNImod2) # 5
+
+(nrow(subset(MNImod2, MNImod2$settle == 6))) / nrow(MNImod2) # 6
+
+(nrow(subset(MNImod2, MNImod2$settle == 7))) / nrow(MNImod2) # 7
+
+# col 4: NEAR_FID = 3
+
+(nrow(subset(MNImod3, MNImod3$settle == 0))) / nrow(MNImod3) # 0
+
+(nrow(subset(MNImod3, MNImod3$settle == 1))) / nrow(MNImod3) # 1
+
+(nrow(subset(MNImod3, MNImod3$settle == 2))) / nrow(MNImod3) # 2
+
+(nrow(subset(MNImod3, MNImod3$settle == 100))) / nrow(MNImod3) # self
+
+(nrow(subset(MNImod3, MNImod3$settle == 4))) / nrow(MNImod3) # 4
+
+(nrow(subset(MNImod3, MNImod3$settle == 5))) / nrow(MNImod3) # 5
+
+(nrow(subset(MNImod3, MNImod3$settle == 6))) / nrow(MNImod3) # 6
+
+(nrow(subset(MNImod3, MNImod3$settle == 7))) / nrow(MNImod3) # 7
+
+# col 5: NEAR_FID = 4
+
+(nrow(subset(MNImod4, MNImod4$settle == 0))) / nrow(MNImod4) # 0
+
+(nrow(subset(MNImod4, MNImod4$settle == 1))) / nrow(MNImod4) # 1
+
+(nrow(subset(MNImod4, MNImod4$settle == 2))) / nrow(MNImod4) # 2
+
+(nrow(subset(MNImod4, MNImod4$settle == 3))) / nrow(MNImod4) # 3
+
+(nrow(subset(MNImod4, MNImod4$settle == 100))) / nrow(MNImod4) # self
+
+(nrow(subset(MNImod4, MNImod4$settle == 5))) / nrow(MNImod4) # 5
+
+(nrow(subset(MNImod4, MNImod4$settle == 6))) / nrow(MNImod4) # 6
+
+(nrow(subset(MNImod4, MNImod4$settle == 7))) / nrow(MNImod4) # 7
+
+# col 6: NEAR_FID = 5
+
+(nrow(subset(MNImod5, MNImod5$settle == 0))) / nrow(MNImod5) # 0
+
+(nrow(subset(MNImod5, MNImod5$settle == 1))) / nrow(MNImod5) # 1
+
+(nrow(subset(MNImod5, MNImod5$settle == 2))) / nrow(MNImod5) # 2
+
+(nrow(subset(MNImod5, MNImod5$settle == 3))) / nrow(MNImod5) # 3
+
+(nrow(subset(MNImod5, MNImod5$settle == 4))) / nrow(MNImod5) # 4
+
+(nrow(subset(MNImod5, MNImod5$settle == 100))) / nrow(MNImod5) # self
+
+(nrow(subset(MNImod5, MNImod5$settle == 6))) / nrow(MNImod5) # 6
+
+(nrow(subset(MNImod5, MNImod5$settle == 7))) / nrow(MNImod5) # 7
+
+# col 7: NEAR_FID = 6
+
+(nrow(subset(MNImod6, MNImod6$settle == 0))) / nrow(MNImod6) # 0
+
+(nrow(subset(MNImod6, MNImod6$settle == 1))) / nrow(MNImod6) # 1
+
+(nrow(subset(MNImod6, MNImod6$settle == 2))) / nrow(MNImod6) # 2
+
+(nrow(subset(MNImod6, MNImod6$settle == 3))) / nrow(MNImod6) # 3
+
+(nrow(subset(MNImod6, MNImod6$settle == 4))) / nrow(MNImod6) # 4
+
+(nrow(subset(MNImod6, MNImod6$settle == 5))) / nrow(MNImod6) # 5
+
+(nrow(subset(MNImod6, MNImod6$settle == 100))) / nrow(MNImod6) # self
+
+(nrow(subset(MNImod6, MNImod6$settle == 7))) / nrow(MNImod6) # 7
+
+# col 8: NEAR_FID = 7
+
+(nrow(subset(MNImod7, MNImod7$settle == 0))) / nrow(MNImod7) # 0
+
+(nrow(subset(MNImod7, MNImod7$settle == 1))) / nrow(MNImod7) # 1
+
+(nrow(subset(MNImod7, MNImod7$settle == 2))) / nrow(MNImod7) # 2
+
+(nrow(subset(MNImod7, MNImod7$settle == 3))) / nrow(MNImod7) # 3
+
+(nrow(subset(MNImod7, MNImod7$settle == 4))) / nrow(MNImod7) # 4
+
+(nrow(subset(MNImod7, MNImod7$settle == 5))) / nrow(MNImod7) # 5
+
+(nrow(subset(MNImod7, MNImod7$settle == 6))) / nrow(MNImod7) # 6
+
+(nrow(subset(MNImod7, MNImod7$settle == 100))) / nrow(MNImod7) # self
+
+#######################################################################
+
+# Calculate probabilities: BI
+# col 1: NEAR_FID = 0
+
+(nrow(subset(BImod0, BImod0$settle == 100))) / nrow(BImod0) # self
+
+(nrow(subset(BImod0, BImod0$settle == 1))) / nrow(BImod0) # 1
+
+(nrow(subset(BImod0, BImod0$settle == 2))) / nrow(BImod0) # 2
+
+(nrow(subset(BImod0, BImod0$settle == 3))) / nrow(BImod0) # 3
+
+(nrow(subset(BImod0, BImod0$settle == 4))) / nrow(BImod0) # 4
+
+(nrow(subset(BImod0, BImod0$settle == 5))) / nrow(BImod0) # 5
+
+(nrow(subset(BImod0, BImod0$settle == 6))) / nrow(BImod0) # 6
+
+(nrow(subset(BImod0, BImod0$settle == 7))) / nrow(BImod0) # 7
+
+# col 2: NEAR_FID = 1
+
+(nrow(subset(BImod1, BImod1$settle == 0))) / nrow(BImod1) # 0
+
+(nrow(subset(BImod1, BImod1$settle == 100))) / nrow(BImod1) # self
+
+(nrow(subset(BImod1, BImod1$settle == 2))) / nrow(BImod1) # 2
+
+(nrow(subset(BImod1, BImod1$settle == 3))) / nrow(BImod1) # 3
+
+(nrow(subset(BImod1, BImod1$settle == 4))) / nrow(BImod1) # 4
+
+(nrow(subset(BImod1, BImod1$settle == 5))) / nrow(BImod1) # 5
+
+(nrow(subset(BImod1, BImod1$settle == 6))) / nrow(BImod1) # 6
+
+(nrow(subset(BImod1, BImod1$settle == 7))) / nrow(BImod1) # 7
+
+# col 3: NEAR_FID = 2
+
+(nrow(subset(BImod2, BImod2$settle == 0))) / nrow(BImod2) # 0
+
+(nrow(subset(BImod2, BImod2$settle == 1))) / nrow(BImod2) # 1
+
+(nrow(subset(BImod2, BImod2$settle == 100))) / nrow(BImod2) # self
+
+(nrow(subset(BImod2, BImod2$settle == 3))) / nrow(BImod2) # 3
+
+(nrow(subset(BImod2, BImod2$settle == 4))) / nrow(BImod2) # 4
+
+(nrow(subset(BImod2, BImod2$settle == 5))) / nrow(BImod2) # 5
+
+(nrow(subset(BImod2, BImod2$settle == 6))) / nrow(BImod2) # 6
+
+(nrow(subset(BImod2, BImod2$settle == 7))) / nrow(BImod2) # 7
+
+# col 4: NEAR_FID = 3
+
+(nrow(subset(BImod3, BImod3$settle == 0))) / nrow(BImod3) # 0
+
+(nrow(subset(BImod3, BImod3$settle == 1))) / nrow(BImod3) # 1
+
+(nrow(subset(BImod3, BImod3$settle == 2))) / nrow(BImod3) # 2
+
+(nrow(subset(BImod3, BImod3$settle == 100))) / nrow(BImod3) # self
+
+(nrow(subset(BImod3, BImod3$settle == 4))) / nrow(BImod3) # 4
+
+(nrow(subset(BImod3, BImod3$settle == 5))) / nrow(BImod3) # 5
+
+(nrow(subset(BImod3, BImod3$settle == 6))) / nrow(BImod3) # 6
+
+(nrow(subset(BImod3, BImod3$settle == 7))) / nrow(BImod3) # 7
+
+# col 5: NEAR_FID = 4
+
+(nrow(subset(BImod4, BImod4$settle == 0))) / nrow(BImod4) # 0
+
+(nrow(subset(BImod4, BImod4$settle == 1))) / nrow(BImod4) # 1
+
+(nrow(subset(BImod4, BImod4$settle == 2))) / nrow(BImod4) # 2
+
+(nrow(subset(BImod4, BImod4$settle == 3))) / nrow(BImod4) # 3
+
+(nrow(subset(BImod4, BImod4$settle == 100))) / nrow(BImod4) # self
+
+(nrow(subset(BImod4, BImod4$settle == 5))) / nrow(BImod4) # 5
+
+(nrow(subset(BImod4, BImod4$settle == 6))) / nrow(BImod4) # 6
+
+(nrow(subset(BImod4, BImod4$settle == 7))) / nrow(BImod4) # 7
+
+# col 6: NEAR_FID = 5
+
+(nrow(subset(BImod5, BImod5$settle == 0))) / nrow(BImod5) # 0
+
+(nrow(subset(BImod5, BImod5$settle == 1))) / nrow(BImod5) # 1
+
+(nrow(subset(BImod5, BImod5$settle == 2))) / nrow(BImod5) # 2
+
+(nrow(subset(BImod5, BImod5$settle == 3))) / nrow(BImod5) # 3
+
+(nrow(subset(BImod5, BImod5$settle == 4))) / nrow(BImod5) # 4
+
+(nrow(subset(BImod5, BImod5$settle == 100))) / nrow(BImod5) # self
+
+(nrow(subset(BImod5, BImod5$settle == 6))) / nrow(BImod5) # 6
+
+(nrow(subset(BImod5, BImod5$settle == 7))) / nrow(BImod5) # 7
+
+# col 7: NEAR_FID = 6
+
+(nrow(subset(BImod6, BImod6$settle == 0))) / nrow(BImod6) # 0
+
+(nrow(subset(BImod6, BImod6$settle == 1))) / nrow(BImod6) # 1
+
+(nrow(subset(BImod6, BImod6$settle == 2))) / nrow(BImod6) # 2
+
+(nrow(subset(BImod6, BImod6$settle == 3))) / nrow(BImod6) # 3
+
+(nrow(subset(BImod6, BImod6$settle == 4))) / nrow(BImod6) # 4
+
+(nrow(subset(BImod6, BImod6$settle == 5))) / nrow(BImod6) # 5
+
+(nrow(subset(BImod6, BImod6$settle == 100))) / nrow(BImod6) # self
+
+(nrow(subset(BImod6, BImod6$settle == 7))) / nrow(BImod6) # 7
+
+# col 8: NEAR_FID = 7
+
+(nrow(subset(BImod7, BImod7$settle == 0))) / nrow(BImod7) # 0
+
+(nrow(subset(BImod7, BImod7$settle == 1))) / nrow(BImod7) # 1
+
+(nrow(subset(BImod7, BImod7$settle == 2))) / nrow(BImod7) # 2
+
+(nrow(subset(BImod7, BImod7$settle == 3))) / nrow(BImod7) # 3
+
+(nrow(subset(BImod7, BImod7$settle == 4))) / nrow(BImod7) # 4
+
+(nrow(subset(BImod7, BImod7$settle == 5))) / nrow(BImod7) # 5
+
+(nrow(subset(BImod7, BImod7$settle == 6))) / nrow(BImod7) # 6
+
+(nrow(subset(BImod7, BImod7$settle == 100))) / nrow(BImod7) # self

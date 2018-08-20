@@ -1,0 +1,246 @@
+to pull changes- 
+
+git pull in roms/src
+
+/share/frinkraid2/lindsayv/hioekg-template
+
+nc_config tells fortran compiler where things are located
+
+rmake -j2 in the hioekg-template dir
+
+# will generate oceanM file- this is what you submit to the queue
+
+# look at roms/src/ROMS/Include/cppdefs.h
+
+
+
+hioekg.h
+
+*include/ : used for code customization; FORTRAN code
+
+ocean.in - at the bottom there are glossary terms, as needed if I don't know what a variable does. sets all params
+
+roms_config.sh : compiling code (rmake utility; wrapper for make; it loads the roms_config.sh file and loads it)
+
+spinup.sh
+
+
+*optional, we aren't using it
+
+# to pull changes: git pull in roms/src
+
+/share/frinkraid2/lindsayv/hioekg-template # important things
+
+# nc_config tells fortran compiler where things are located
+
+# rmake -j2 in the hioekg-template dir; will generate oceanM file- this is what you submit to the queue
+
+# look at roms/src/ROMS/Include/cppdefs.h
+
+### In ocean.in:
+
+# VARNAME in ocean.in should be set to a specific dir if it isn't in the hioekg-template dir.
+
+# If we update a file, go into the hioekg-template dir and then type rmake. It will recompile.
+
+# grid has 188 in the I direction, 88 in the J direction. I is divided into 8 sections, and J is divided into 8 sections.
+
+# ! Time-Stepping parameters.
+
+      NTIMES == 720 # never touch this
+          DT == 10.0d0 # largest possible value to use that keeps the model stable. this is the baroclinic timestep. Brian said "this seems low" and he would put it higher
+     NDTFAST == 44 # barotopic mode- how many times do you want to run the barotopic mode for every one timestep in DT? here, this is a 10/44 sec = one quarter second timestep for the barotropic. Brian said "this seems really high"
+
+# Once we get the model running, can we increase DT and increase NDTFAST?
+
+# We can compute NDTFAST = sqrt(gH). We have both g and H. 
+
+
+# ! Output history, quicksave, average, and diagnostic files parameters.
+
+        NHIS == 360  # This says every 3600 seconds (we have a 10 sec timestep), we save a snapshot of the model. We care more about historys than avgs.
+ 	NAVG == 8640 # * 10 sec timestep = we get avgs every 86400 sec, or each day. Cumulative avgs.
+
+
+# ! Harmonic/biharmonic horizontal diffusion of tracer for nonlinear model
+! and adjoint-based algorithms: [1:NAT+NPT,Ngrids].
+
+        TNU2 == 35.0d0  35.0d0                    ! m2/s # Brian says seems high 
+# ! Harmonic/biharmonic, horizontal viscosity coefficient for nonlinear model
+! and adjoint-based algorithms: [Ngrids].
+
+       VISC2 == 50.0d0                           ! m2/s # "Seems high"
+
+# Precludes boundary issue problems...just leave alone, but here it is...
+# ! Logical switches (TRUE/FALSE) to increase/decrease horizontal viscosity
+! and/or diffusivity in specific areas of the application domain (like
+! sponge areas) for the desired application grid.
+
+    LuvSponge == F                              ! horizontal momentum
+LtracerSponge == F F                            ! temperature, salinity, inert
+
+
+# **** documentation on roms.org ****
+
+# ! Vertical S-coordinates parameters (see below for details), [1:Ngrids].
+
+     THETA_S == 7.0d0                      ! surface stretching parameter 
+     THETA_B == 0.5d0                      ! bottom  stretching parameter
+      TCLINE == 25.0d0                     ! critical depth (m) # so upper 25 m is surface
+
+# ! Time-stamp assigned for model initialization, reference time
+! origin for tidal forcing, and model reference time for output
+! NetCDF units attribute.
+
+      DSTART =  6744.0d0                      ! days # the day number you want the model to start on. "I want to start 6744 days from TIME_REF"
+  TIDE_START =  6575.0d0                      ! days # we need a file that tells us about the amplitude and phase of the tides. We say, ok, I'll set all my phases relative to day 6575 (arbitrary day)
+    TIME_REF =  20000101.0d0                      ! yyyymmdd.dd
+
+# This is all for having a point source (in our case, rivers):
+
+! Logical switches (TRUE/FALSE) to activate horizontal momentum transport
+! point Sources/Sinks (like river runoff transport) and mass point
+! Sources/Sinks (like volume vertical influx), [1:Ngrids].
+
+      LuvSrc == T                          ! horizontal momentum transport
+       LwSrc == F                          ! volume vertical influx
+
+! Logical switches (TRUE/FALSE) to activate tracers point Sources/Sinks
+! (like river runoff) and to specify which tracer variables to consider:
+! [1:NAT+NPT,Ngrids].  See glossary below for details.
+
+  LtracerSrc == F T                        ! temperature, salinity, inert # tells model that I am loading a file w salinity and vel
+
+
+# We might want to think about this at some point...
+
+
+! Logical switches (TRUE/FALSE) to activate writing of fields into
+! HISTORY output file.
+
+Hout(idUvel) == T       ! u                  3D U-velocity
+Hout(idVvel) == T       ! v                  3D V-velocity
+Hout(idu3dE) == F       ! u_eastward         3D U-eastward  at RHO-points
+Hout(idv3dN) == F       ! v_northward        3D V-northward at RHO-points
+Hout(idWvel) == T       ! w                  3D W-velocity
+Hout(idOvel) == T       ! omega              omega vertical velocity
+Hout(idUbar) == T       ! ubar               2D U-velocity
+Hout(idVbar) == T       ! vbar               2D V-velocity
+Hout(idu2dE) == F       ! ubar_eastward      2D U-eastward  at RHO-points
+Hout(idv2dN) == F       ! vbar_northward     2D V-northward at RHO-points
+Hout(idFsur) == T       ! zeta               free-surface
+Hout(idBath) == F       ! bath               time-dependent bathymetry
+
+Hout(idTvar) == T T     ! temp, salt         temperature and salinity
+
+Hout(idpthR) == F       ! z_rho              time-varying depths of RHO-points
+Hout(idpthU) == F       ! z_u                time-varying depths of U-points
+Hout(idpthV) == F       ! z_v                time-varying depths of V-points
+Hout(idpthW) == F       ! z_w                time-varying depths of W-points
+
+Hout(idUsms) == F       ! sustr              surface U-stress
+
+# Brian says "I would turn off some of these ^ things, like w and omega"
+
+# Always save the prognostic (needed) variables: zeta, ubar, vbar, u, v, temp, salt 
+
+
+### "here's the important stuff...heavy lifting"
+
+! Input NetCDF file names, [1:Ngrids].
+
+     GRDNAME == /share/frinkraid2/dalep3/pacioos/hioekg-nlm-waves/hioekg-grid.nc # defines lat, long, bty etc. Can use python or ncview to examine.
+     ININAME == ini.nc # Initial conditions to run with
+     ITLNAME == itl.nc 
+     IRPNAME == irp.nc
+     IADNAME == iad.nc
+     FWDNAME == fwd.nc
+     ADSNAME == ads.nc
+
+
+# 
+! Input lateral boundary conditions and climatology file names.  The
+! USER has the option to split input data time records into several
+! NetCDF files (see prologue instructions above). If so, use a single
+! line per entry with a vertical bar (|) symbol after each entry,
+! except the last one.
+
+     BRYNAME == /share/frinkraid2/dalep3/pacioos/hioekg-nlm-waves/hioekg-bry.nc # boundary conditions
+     CLMNAME == /share/frinkraid2/dalep3/pacioos/hioekg-nlm-waves/hioekg-clim.nc # climatology (seapy auto generates this; 'this is what the outer model says for your grid'); keeps the model from deviating from the climatology, but not needed (not turned on currently)
+
+
+! Input climatology nudging coefficients file name.
+
+     NUDNAME == ocean_nud.nc # what is the timescale to restore toward climatology (larger = looser)
+
+
+! Output NetCDF file names, [1:Ngrids]. # not everything in the list below will be created
+
+#   BPARNAM =  bio_Fennel.in # this will be the cobalt.in file (Lisa has done this)
+
+################## how to run the model on frinkiac #################
+
+# Run this model on as many processors as possible
+# In Brian's cluster, we have default (15 nodes, 8 cores each) & F1 (4 nodes, 16 cores each; a little faster as it's newer)
+
+On the queue, cmd line, we care about 2 commands-
+
+qstat # tells us what is running
+qdel [a number] # deletes job [a number] frpom the queue, if you've made an error
+qexec -N [name that appears in cluster] - P [number of cores] - Q [default or F1]  python myscript.py # Usually P and Q are not noted. Here, "python myscript.py" is just any sort of Unix-based command for anything.
+
+# There are 2 ways to run something. The most common way is to use cycle_roms. A second way is to use a script called romsexec. 
+
+### cycle_roms lets multiple people use the queue. I can set a cycle to run for 30 days, then once that timestep is completed, it sets up for the next 30 days and gets in line again.
+
+# To use cycle_roms, type "cycle_roms spinup.sh" ...then we check the queue now and again to see how it's doing
+
+# Within spinup.sh (don't edit any of this):
+
+ROMS_RUN_NAME="HIOEKG Testing"
+ROMS_EXEC=${PBS_O_WORKDIR}/oceanM # WORKDIR is the queue
+ROMS_INPUT=${PBS_O_WORKDIR}/ocean.in # Which input file to use?
+ROMS_FAIL_INPUT=${PBS_O_WORKDIR}/ocean-fail.in # set this to 0 soemtime...
+ROMS_START_DAY=6744 
+ROMS_END_DAY=6751
+ROMS_WORK_DIR=${PBS_O_WORKDIR}/work
+ROMS_OUT_DIR=${PBS_O_WORKDIR}/output # where it's putting the files, it has to wipe the other dir and prep for next run
+ROMS_RUN_DAYS=7 
+ROMS_EPOCH=2000 
+ROMS_EPOCH_YEARDAY=0
+ROMS_QUEUE="nodes=4:ppn=16" # It uses all the processors on a given node
+ROMS_QUEUE_NAME="F1" 
+ROMS_USE_RESTART=1 # Almost always leave it at 1. When it goes to the next cycle, it will look for a restart file. This is generated when the cycle ends. It's the same as a history file, but it saves for information. 
+ROMS_PRE_SCRIPT= # This and the next can be important. Here, we may not have a valid .nc for each cycle. This allows us to load a different file for some runs if needed.
+ROMS_POST_SCRIPT= # May need to do some post processing before starting next file. Rarely used.
+ROMS_POST_BACKGROUND_SCRIPT= # Run when cycle ends. Submitted to the queue independently. i.e., we have a script to generate a statistic about the cycle while the new cycle runs (likely not going to use).
+
+
+
+
+
+### romsexec -h tells me my options...
+ -e executable [oceanM]
+ -i input [ocean.in]
+ -n name [ROMSEXEC]
+ -q queue name [default]
+ -w {wait} [off]
+ -s {silent} [off] 
+
+# If I use romsexec, my ocean.in better be set up perfectly. cycle_roms is a little easier- it figures out things for you, like boundary conditions, forcings..
+
+mkdir output
+cd /share/frinkraid2/lindsayv/hioekg-template/output # created an output directory, nav in
+
+cp /share/frinkraid2/dalep3/pacioos/hioekg-nlm-waves/ini.nc # copied dale's files into this dir
+
+cd /share/frinkraid2/lindsayv/hioekg-template/ # nav out
+
+cycle_roms -d spinup.sh # dry run
+
+uvp tsp splines psource
+
+cd /share/frinkraid2/lindsayv/hioekg-template/work
+ls # I see 4 files:  ini.nc  irp.nc  ocean.in  varinfo.dat
+
+
