@@ -28,22 +28,22 @@ cd /share/frinkraid2/lindsayv/
 	# 5. spinup.sh (don't edit any of this):
 
 ROMS_RUN_NAME="HIOEKG Testing"
-ROMS_EXEC=${PBS_O_WORKDIR}/oceanM # WORKDIR is the queue
-ROMS_INPUT=${PBS_O_WORKDIR}/ocean.in # Which input file to use?
-ROMS_FAIL_INPUT=${PBS_O_WORKDIR}/ocean-fail.in ### Reminder to set this to 0!!
+ROMS_EXEC=${PBS_O_WORKDIR}/oceanM  # WORKDIR is the queue
+ROMS_INPUT=${PBS_O_WORKDIR}/ocean.in  # Which input file to use?
+ROMS_FAIL_INPUT=${PBS_O_WORKDIR}/ocean-fail.in  # I set this to 0 per BP's request
 ROMS_START_DAY=6744 
 ROMS_END_DAY=6751
 ROMS_WORK_DIR=${PBS_O_WORKDIR}/work
-ROMS_OUT_DIR=${PBS_O_WORKDIR}/output # where it's putting the files, it has to wipe the other dir and prep for next run
+ROMS_OUT_DIR=${PBS_O_WORKDIR}/output  # Where it's putting the files; it has to wipe the other dir and prep for next run
 ROMS_RUN_DAYS=7 
 ROMS_EPOCH=2000 
 ROMS_EPOCH_YEARDAY=0
-ROMS_QUEUE="nodes=4:ppn=16" # It uses all the processors on a given node
+ROMS_QUEUE="nodes=4:ppn=16"  # It uses all the processors on a given node
 ROMS_QUEUE_NAME="F1" 
-ROMS_USE_RESTART=1 # Almost always leave it at 1. When it goes to the next cycle, it will look for a restart file. This is generated when the cycle ends. It's the same as a history file, but it saves for information. 
-ROMS_PRE_SCRIPT= # This and the next can be important. Here, we may not have a valid .nc for each cycle. This allows us to load a different file for some runs if needed.
-ROMS_POST_SCRIPT= # May need to do some post processing before starting next file. Rarely used.
-ROMS_POST_BACKGROUND_SCRIPT= # Run when cycle ends. Submitted to the queue independently. i.e., we have a script to generate a statistic about the cycle while the new cycle runs (likely not going to use).
+ROMS_USE_RESTART=1  # Almost always leave it at 1. When it goes to the next cycle, it will look for a restart file. This is generated when the cycle ends. It's the same as a history file, but it saves for information. 
+ROMS_PRE_SCRIPT=  # This and the next can be important. Here, we may not have a valid .nc for each cycle. This allows us to load a different file for some runs if needed.
+ROMS_POST_SCRIPT=  # May need to do some post processing before starting next file. Rarely used.
+ROMS_POST_BACKGROUND_SCRIPT=  # Run when cycle ends. Submitted to the queue independently. i.e., we have a script to generate a statistic about the cycle while the new cycle runs (likely not going to use).
 
 
 ### ocean.in notes:
@@ -130,88 +130,69 @@ Hout(idpthW) == F       ! z_w                time-varying depths of W-points
 
 Hout(idUsms) == F       ! sustr              surface U-stress
 
-# Brian says "I would turn off some of these ^ things, like w and omega"
+# BP says "I would turn off some of these ^ things, like w and omega"
 
 # Always save the prognostic (needed) variables: zeta, ubar, vbar, u, v, temp, salt 
 ```
 
 ### "Here's the important stuff...heavy lifting"
 
-! Input NetCDF file names, [1:Ngrids].
+## Input NetCDF file names, [1:Ngrids].
 
-     GRDNAME == /share/frinkraid2/dalep3/pacioos/hioekg-nlm-waves/hioekg-grid.nc # defines lat, long, bty etc. Can use python or ncview to examine.
-     ININAME == ini.nc # Initial conditions to run with
-     ITLNAME == itl.nc 
-     IRPNAME == irp.nc
-     IADNAME == iad.nc
-     FWDNAME == fwd.nc
-     ADSNAME == ads.nc
+     # GRDNAME == /share/frinkraid2/dalep3/pacioos/hioekg-nlm-waves/hioekg-grid.nc  # defines lat, long, bty etc. Can use python or ncview to examine.
+     # ININAME == ini.nc # Initial conditions to run with
+   
 
+## Input lateral boundary conditions and climatology file names
 
-# 
-! Input lateral boundary conditions and climatology file names.  The
-! USER has the option to split input data time records into several
-! NetCDF files (see prologue instructions above). If so, use a single
-! line per entry with a vertical bar (|) symbol after each entry,
-! except the last one.
-
-     BRYNAME == /share/frinkraid2/dalep3/pacioos/hioekg-nlm-waves/hioekg-bry.nc # boundary conditions
-     CLMNAME == /share/frinkraid2/dalep3/pacioos/hioekg-nlm-waves/hioekg-clim.nc # climatology (seapy auto generates this; 'this is what the outer model says for your grid'); keeps the model from deviating from the climatology, but not needed (not turned on currently)
+     # BRYNAME == /share/frinkraid2/dalep3/pacioos/hioekg-nlm-waves/hioekg-bry.nc  # boundary conditions
+     # CLMNAME == /share/frinkraid2/dalep3/pacioos/hioekg-nlm-waves/hioekg-clim.nc  # climatology (seapy auto generates this; 'this is what the outer model says for your grid'); keeps the model from deviating from the climatology, but not needed (not turned on currently)
 
 
-! Input climatology nudging coefficients file name.
+## Input climatology nudging coefficients file name.
 
-     NUDNAME == ocean_nud.nc # what is the timescale to restore toward climatology (larger = looser)
+     # NUDNAME == ocean_nud.nc # what is the timescale to restore toward climatology (larger = looser)
 
 
-! Output NetCDF file names, [1:Ngrids]. # not everything in the list below will be created
+## Output NetCDF file names, [1:Ngrids]. # not everything in the list below will be created
 
-#   BPARNAM =  bio_Fennel.in # this will be the cobalt.in file (Lisa has done this)
+	# BPARNAM =  bio_Fennel.in # this will be the cobalt.in file (Lisa has done this)
 
-################## how to run the model on frinkiac #################
+################## Running the model on frinkiac #################
 
-# Run this model on as many processors as possible
+# Run the model on as many processors as possible
 # In Brian's cluster, we have default (15 nodes, 8 cores each) & F1 (4 nodes, 16 cores each; a little faster as it's newer)
 
-On the queue, cmd line, we care about 2 commands-
+# On the queue, cmd line, we care about 3 commands:
 
-qstat # tells us what is running
-qdel [a number] # deletes job [a number] frpom the queue, if you've made an error
-qexec -N [name that appears in cluster] - P [number of cores] - Q [default or F1]  python myscript.py # Usually P and Q are not noted. Here, "python myscript.py" is just any sort of Unix-based command for anything.
+# 1. qstat # tells us what is running
+# 2. qdel [a number] # deletes job [a number] frpom the queue, if you've made an error
+# 3. qexec -N [name that appears in cluster] - P [number of cores] - Q [default or F1]  python myscript.py # Usually P and Q are not noted. Here, "python myscript.py" is just any sort of Unix-based command for anything.
 
 # There are 2 ways to run something. The most common way is to use cycle_roms. A second way is to use a script called romsexec. 
+	# 1. cycle_roms: lets multiple people use the queue
+		# I can set a cycle to run for 30 days, then once that timestep is 			completed, it sets up for the next 30 days and gets in line again
+		# To use cycle_roms, type "cycle_roms spinup.sh" ...then we check the 			queue now and again to see how it's doing
 
-### cycle_roms lets multiple people use the queue. I can set a cycle to run for 30 days, then once that timestep is completed, it sets up for the next 30 days and gets in line again.
-
-# To use cycle_roms, type "cycle_roms spinup.sh" ...then we check the queue now and again to see how it's doing
-
-# Within spinup.sh 
-
-
-
-
-### romsexec -h tells me my options...
- -e executable [oceanM]
- -i input [ocean.in]
- -n name [ROMSEXEC]
- -q queue name [default]
- -w {wait} [off]
- -s {silent} [off] 
+	# 2. romsexec -h tells me my options...
+ 		# -e executable [oceanM]
+ 		# -i input [ocean.in]
+ 		# -n name [ROMSEXEC]
+ 		# -q queue name [default]
+ 		# -w {wait} [off]
+ 		# -s {silent} [off] 
 
 # If I use romsexec, my ocean.in better be set up perfectly. cycle_roms is a little easier- it figures out things for you, like boundary conditions, forcings..
 
-mkdir output
-cd /share/frinkraid2/lindsayv/hioekg-template/output # created an output directory, nav in
+### Ending practice: didn't end up working, but here it is: 
 
-cp /share/frinkraid2/dalep3/pacioos/hioekg-nlm-waves/ini.nc # copied dale's files into this dir
+# mkdir output # Create output dir for model
+# cd /share/frinkraid2/lindsayv/hioekg-template/output 
+# cp /share/frinkraid2/dalep3/pacioos/hioekg-nlm-waves/ini.nc # Copied Dale's files into this dir
+# cd /share/frinkraid2/lindsayv/hioekg-template/ # nav out
 
-cd /share/frinkraid2/lindsayv/hioekg-template/ # nav out
+## Here is the command to do a dry run:
+# cycle_roms -d spinup.sh 
 
-cycle_roms -d spinup.sh # dry run
-
-uvp tsp splines psource
-
-cd /share/frinkraid2/lindsayv/hioekg-template/work
-ls # I see 4 files:  ini.nc  irp.nc  ocean.in  varinfo.dat
 
 
