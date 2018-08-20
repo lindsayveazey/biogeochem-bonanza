@@ -193,6 +193,3 @@ Hout(idUsms) == F       ! sustr              surface U-stress
 
 ## Here is the command to do a dry run:
 # cycle_roms -d spinup.sh 
-
-
-
