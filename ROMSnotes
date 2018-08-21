@@ -1,3 +1,20 @@
+### Qs for Brian
+# Confirm that spinup.sh can overwrite other specifications
+# When do we use rmake- when we edit ocean.in? And..?
+# In ocean.in:
+
+#! Time-stamp assigned for model initialization, reference time
+#! origin for tidal forcing, and model reference time for output
+#! NetCDF units attribute.
+
+#      DSTART =  6744.0d0                      ! days
+#  TIDE_START =  6575.0d0                      ! days 
+
+# I have a note that states that TIDE_START is an arbitrary day- can we discuss? 
+# Review running the model, nesting, and timeline
+# Update on M McManus work?
+# Asking Lisa for help re coupling
+
 ########### ROMS workflow ###########
 # See documentation on myroms.org
 
@@ -15,17 +32,14 @@ cd ./roms  # The ./folder notation abbreviates my typing
 cd ./src
 git pull  # Updates /roms/src
 cd /share/frinkraid2/lindsayv/
-## UNSURE about this part- how did we get /hioekg-template? Ask T
-#? mkdir hioekg-template 
-#? cd ./hioekg-template
-#? rmake -j2  # Will generate oceanM* file- this is what I submit to the queue. This is a wrapper for 'make'; it loads the roms_config.sh file
 
 # ls  # There are several items here:
 	# 1. nc_config: tells Fortran compiler where things are located
 	# 2. ocean.in: sets all parameters. At the bottom there are glossary terms, as needed if I don't know what a variable does
 	# 3. include/ : used for code customization; Fortran code
 	# 4. roms_config.sh: compiles code; rmake loads it
-	# 5. spinup.sh (don't edit any of this):
+	# 5. hioekg.h: what parts of the code are being used. "rmake clean", then "rmake -j 2": Will generate oceanM* file- this is what I submit to the queue. This is a wrapper for 'make'; it loads the roms_config.sh file
+	# 6. spinup.sh (the definitions in this file will override other options):
 
 ROMS_RUN_NAME="HIOEKG Testing"
 ROMS_EXEC=${PBS_O_WORKDIR}/oceanM  # WORKDIR is the queue
@@ -171,8 +185,8 @@ Hout(idUsms) == F       ! sustr              surface U-stress
 
 # There are 2 ways to run something. The most common way is to use cycle_roms. A second way is to use a script called romsexec. 
 	# 1. cycle_roms: lets multiple people use the queue
-		# I can set a cycle to run for 30 days, then once that timestep is 			completed, it sets up for the next 30 days and gets in line again
-		# To use cycle_roms, type "cycle_roms spinup.sh" ...then we check the 			queue now and again to see how it's doing
+		# I can set a cycle to run for 30 days, then once that timestep is completed, it sets up for the next 30 days and gets in line again
+		# To use cycle_roms, type "cycle_roms spinup.sh" ...then we check the queue now and again to see how it's doing
 
 	# 2. romsexec -h tells me my options...
  		# -e executable [oceanM]
@@ -193,3 +207,5 @@ Hout(idUsms) == F       ! sustr              surface U-stress
 
 ## Here is the command to do a dry run:
 # cycle_roms -d spinup.sh 
+
+# varinfo.dat, oceanM*, build are created by rmake command 
