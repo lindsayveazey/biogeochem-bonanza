@@ -1,4 +1,33 @@
-### Qs for Brian
+### Quick notes
+# Connect to server 
+ssh lindsayv@frinkiac.soest.hawaii.edu
+pwd
+ls
+
+# Create file
+nano name
+
+# Copy file from one location to another
+cp fileToCopyFromPWD /share/frinkraid2/lindsayv/folderToCopyInto
+cp /path/fileToCopy /share/frinkraid2/lindsayv/folderToCopyInto
+
+# Delete file
+rm /path/fileToDel
+
+# Make dir
+mkdir name
+
+# Copy folder
+cp - r /path/fileToCopy /share/frinkraid2/lindsayv/folderToCopyInto
+
+# Delete dir
+rmdir name
+rm -r name # if not empty
+
+# Move file or folder
+mv oldPath newPath
+
+###### Qs for Brian ######
 # Confirm that spinup.sh can overwrite other specifications
 # When do we use rmake- when we edit ocean.in? And..?
 # In ocean.in:
