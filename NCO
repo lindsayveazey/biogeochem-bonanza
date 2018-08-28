@@ -1,0 +1,19 @@
+## NCO (NetCDF Operators) notes
+# http://nco.sourceforge.net/nco.html
+
+# MERGE FILES: The simplest way to create the union of two files:
+
+ncks -A fl_1.nc fl_2.nc # fl_2.nc is the union
+
+# SIMPLE NUMERICAL OPERATIONS: Performs operations on variables of the same name in two different files:
+
+ncbo --op typ='TYPE' 1.nc 2.nc storagefile.nc ..or...
+
+ncadd 1.nc 2.nc 3.nc # Addition
+ncdiff 1.nc 2.nc 3.nc # Subtraction
+ncmult 1.nc 2.nc 3.nc # Multiplication
+ncdivide 1.nc 2.nc 3.nc # Division
+
+
+
+
