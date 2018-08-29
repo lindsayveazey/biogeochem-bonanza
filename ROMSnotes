@@ -4,6 +4,12 @@ ssh lindsayv@frinkiac.soest.hawaii.edu
 pwd
 ls
 
+# Check cluster queue
+qstat
+
+# Delete a job
+qdel JOBID#
+
 # Create file
 nano name
 

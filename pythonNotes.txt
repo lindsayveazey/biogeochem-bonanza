@@ -6,6 +6,7 @@ python
 ipython
 # START JUPYTER: 
 jupyter notebook
+http://localhost:8900/tree? # to access jupyter nb on frinkiac
 ###########################################
 https://jupyter.readthedocs.io/en/latest/running.html # running 
 
