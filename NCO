@@ -14,6 +14,21 @@ ncdiff 1.nc 2.nc 3.nc # Subtraction
 ncmult 1.nc 2.nc 3.nc # Multiplication
 ncdivide 1.nc 2.nc 3.nc # Division
 
+# Concatenating files
+
+ncrcat 1.nc 2.nc 3.nc 4.nc 5.nc 1t5.nc
+
+# Averaging across files 
+
+nces: averaging fixed length variables from multiple files; performs a simple arithmetic average over the record dimension of all the input files, with each record having an equal weight in the average
+
+nrca: averaging record variables from at least one file; performs a simple arithmetic average over the record dimension of all the input files, with each record having an equal weight in the average
+
+# Interpolation
+
+# Ex: multiply 85.nc by 3 and by -2 and add them together to make tst.nc:
+
+ncflint -w 3,-2 85.nc 85.nc tst.nc
 
 
 
