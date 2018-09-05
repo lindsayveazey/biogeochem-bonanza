@@ -267,4 +267,67 @@ q_exec P4 python setup_inner_nest.py # BP says, change the dates in this script 
 
 # "If you want to get ambitious" ...modify this ^ for hioekg.h (Kaneohe) (30-60 day run)
 
+### New notes 9/5- attempting to modify /share/frinkraid2/lindsayv/
+
+cd ./hioekg-template
+
+# In TF's /hinig-nlm-template
+build/    nest/            oceanM*          pre_cycle.sh*   varinfo.dat
+GRID/     ocean_backup.in  out.cdl          roms_config.sh  work/
+hinig.h   ocean.in         output/          run_log
+ncfiles/  ocean.in~        output_TESTRUN/  spinup.sh
+
+# In my /hioekg-template
+build/    include/  oceanM*  roms_config.sh  varinfo.dat
+hioekg.h  ocean.in  output/  spinup.sh       work/
+
+# Copying over TF's /hinig-nlm-template/nest/ to my /hioekg-template
+
+cp -r /share/frinkraid2/tobiasf/hinig-nlm-template/nest /share/frinkraid2/lindsayv/hioekg-template
+
+# Copying over TF's /hinig-nlm-template/ncfiles/ to my /hioekg-template
+
+cp -r /share/frinkraid2/tobiasf/hinig-nlm-template/ncfiles /share/frinkraid2/lindsayv/hioekg-template 
+
+###################################
+# cd into my /nest and change certain things to point to Kbay:
+
+## I think I need to change the following in /ncfiles:
+inner_grid = seapy.model.asgrid(grid_path + "hinig-grid.nc")
+inner_pattern = "hinig-clim"
+bry_file = "../ncfiles/hinig-bry.nc"
+tide_file = "../ncfiles/hinig-tide.nc"
+
+## Also change to 30-60 day run:
+
+# Set up the start and ending days that we want to process
+start_day = 3074  # 2008-06-01
+end_day = 3804    # 2010-06-01
+pattern = re.compile('[1-9]\d{3}')
+
+## And finally, this:
+
+# 4. Make the initial conditions for day 3076, 2008-06-03
+ini_file = '../ncfiles/hinig-ini-03076.nc'
+if not os.path.isfile(ini_file):
+    seapy.roms.initial.from_roms(
+        'hinig-clim_03076.nc', ini_file, record=0, grid=inner_grid)
+
+###################################
+
+# In /ncfiles:
+
+hinig-frc_EDIT.nc  hinig-grid-Brian.nc  hinig-grid.nc  hinig-tide.nc
+
+# Need to replace with hioekg things.
+
+# Need hioekg-grid.nc (/share/frinkraid/powellb/pacioos/grid/roms-hiokg-grid.nc) and hioekg-tide.nc and hioekg-frc.nc
+
+# Checking TF's hioekg.h (note: NO) and then BP's dir.
+
+
+
+
+
+
 
