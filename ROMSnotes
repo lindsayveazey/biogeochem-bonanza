@@ -263,7 +263,7 @@ Hout(idUsms) == F       ! sustr              surface U-stress
 
 # "Something seems wrong with the forcing file" - temp, salinity outputs are crazy
 
-q_exec P4 python setup_inner_nest.py # BP says, change the dates in this script to process a single file just to get it going
+qexec P4 python setup_inner_nest.py # BP says, change the dates in this script to process a single file just to get it going
 
 # "If you want to get ambitious" ...modify this ^ for hioekg.h (Kaneohe) (30-60 day run)
 
@@ -392,11 +392,16 @@ cp /share/frinkraid2/dalep3/pacioos/hinig-niihau/hiig-nlm-2008/hiig-grid.nc .
 
 # Trying again
 
+# run in python (log file?) chunk by chunk to find error
+# need to align dates in frc, clim, ini with fwd files; currently the former 3 are aligned 2018-01-30 and the fwd files are Jul 14 2016 - Aug 7 2017  
 
+# Checked files in dale's repo on F2 = no
 
+# Checking BP's /pacioos on F...
 
-
-
+# momentarily just copying over TF's hinig-nlm-template to my home dir so I have write access. I'm going to change the inner_nest.py to specify the kaneohe grid in my ncfiles dir. 
+# This is taking a while. go ahead and do this folder by folder or all at once at home
+cp -r /share/frinkraid2/tobiasf/hinig-nlm-template/ /share/frinkraid2/lindsayv/hinig-nlm-template
 
 
 
