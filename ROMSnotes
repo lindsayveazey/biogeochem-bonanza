@@ -368,6 +368,31 @@ if not os.path.isfile(ini_file):
     seapy.roms.initial.from_roms(
         'hinig-clim_03076.nc', ini_file, record=0, grid=inner_grid) # CHANGE
 
+## NOTE: Lisa says that generating a new clim file is unnecessary as long as the ini.nc works. Leaving these notes here anyway..
+# I think I need to generate a new clim file for this one day using /share/frinkraid2/dalep3/pacioos/clim/make_clim.py
+
+import seapy
+import numpy as np
+import os
+import datetime
+
+seapy.roms.interp.to_clim("/share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/hioekg_his_0001.nc", "/share/frinkraid2/lindsayv/hioekg-template/ncfiles/hioekg-clim.nc",
+                          "/share/frinkraid2/lindsayv/hioekg-template/ncfiles", nx=3.0 / 12., ny=3 / 12, threads=4,records=np.arange(192,222))
+
+#### Attempting to run the nest script...
+
+qexec P4 python setup_inner_nest.py # died immediately
+# changed grid path to full (correct) vs ../ (wrong) # still no
+
+# need to have the outer grid be hiig.nc...looking for it in TF's dir..
+
+cd /share/frinkraid2/tobiasf # no, go look in Dale's
+cd /share/frinkraid2/lindsayv/hioekg-template/ncfiles/
+cp /share/frinkraid2/dalep3/pacioos/hinig-niihau/hiig-nlm-2008/hiig-grid.nc .
+
+# Trying again
+
+
 
 
 
