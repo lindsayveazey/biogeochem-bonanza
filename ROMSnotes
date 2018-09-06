@@ -321,9 +321,55 @@ hinig-frc_EDIT.nc  hinig-grid-Brian.nc  hinig-grid.nc  hinig-tide.nc
 
 # Need to replace with hioekg things.
 
-# Need hioekg-grid.nc (/share/frinkraid/powellb/pacioos/grid/roms-hiokg-grid.nc) and hioekg-tide.nc and hioekg-frc.nc
+# Need hioekg-grid.nc (/share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/hioekg-grid.nc) and hioekg-tide.nc (/share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/tide.nc) and hioekg-frc.nc (/share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/hioekg-frc.nc)
 
 # Checking TF's hioekg.h (note: NO) and then BP's dir.
+
+# Haven't found anything in BP's dir yet. Maybe nano the forcing and tidal files here and see if we can fudge it (not for tidal; I don't think so re: frc either). Also check Dale's frinkraid2 dir...SEE ABOVE (has what I need)
+
+# /share/frinkraid2/dalep3/tides/tide_analysis/tide-frc13.nc has all MHI
+
+cd /share/frinkraid2/lindsayv/hioekg-template/ncfiles
+
+cp /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/hioekg-grid.nc .
+cp /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/tide.nc .
+cp /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/hioekg-frc.nc .
+cp /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/hioekg-clim.nc .
+cp /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/hioekg-bry.nc .
+cp /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/ini.nc .
+
+
+################
+
+## Edits to make in setup_inner_nest.py:
+
+inner_grid = seapy.model.asgrid(grid_path + "hioekg-grid.nc")
+inner_pattern = "hioekg-clim"
+bry_file = "../ncfiles/hioekg-bry.nc"
+tide_file = "../ncfiles/tide.nc"
+
+## Also change to 30-60 day run:
+
+## range for tide.nc: ?
+## range for frc: 6604 to 6611; 2018-01-30 to 2018-02-06
+## range for clim: same as frc
+## range for bry: ?
+
+# Set up the start and ending days that we want to process
+start_day = 6604  # 2018-01-30
+end_day = 6611    # 2018-02-06
+pattern = re.compile('[1-9]\d{3}')
+
+## And finally, this:
+
+# 4. Make the initial conditions for day 6604, 2018-01-30
+ini_file = '../ncfiles/ini.nc'
+if not os.path.isfile(ini_file):
+    seapy.roms.initial.from_roms(
+        'hinig-clim_03076.nc', ini_file, record=0, grid=inner_grid) # CHANGE
+
+
+
 
 
 
