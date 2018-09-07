@@ -306,18 +306,17 @@ qexec python setup_inner_nest.py # qexec P4 etc...does not work, weirdly
 
 # hiig-grid.nc (outer)
 # hioekg-grid.nc (inner)
-# hioekg_bry.nc
-# ini.nc or specified clim file (at end of script) *this was the issue- I thought we needed an ini.nc file that aligns with the fwd_001_*.nc dates in the script. However, I fudged it by simply putting another ini.nc in my /ncfiles subdirectory, and the script accepted it without a problem.
+# ini.nc or specified clim file (at end of script); ini.nc or clim_*.nc must align with the fwd_001_*.nc files, which will not be a problem since clim_*.nc is produced by this routine)
 
 ## The script produces:
 # hioekg_clim_*.nc
 # hioekg_bry_*.nc
-# hioekg_bry.nc (the metadata indicates that this is modified by the script; it is also required to initialize the script properly)
+# hioekg_bry.nc
 # fwd_001_*_hioekg-grid_pmap.npz (here the wildcard specifies the starting day)
 # hioekg_tide.nc
 
-# On 9/7, script is running for timestep 3072 - 3132 (late May - late July 2008)
-
+# On 9/7, script ran for timestep 3072 - 3132 (late May - late July 2008)
+# Success. 
 
 
 
