@@ -33,6 +33,12 @@ rm -r name # if not empty
 # Move file or folder
 mv oldPath newPath
 
+# List from most to least recent all files with starting name of fwd
+ls -lt fwd* 
+
+# Delete multiple files with same start of name
+rm -f hioekg-* 
+
 ###### Qs for Brian ######
 # Confirm that spinup.sh can overwrite other specifications
 # When do we use rmake- when we edit ocean.in? And..?
@@ -267,67 +273,8 @@ qexec P4 python setup_inner_nest.py # BP says, change the dates in this script t
 
 # "If you want to get ambitious" ...modify this ^ for hioekg.h (Kaneohe) (30-60 day run)
 
-### New notes 9/5- attempting to modify /share/frinkraid2/lindsayv/
 
-cd ./hioekg-template
-
-# In TF's /hinig-nlm-template
-build/    nest/            oceanM*          pre_cycle.sh*   varinfo.dat
-GRID/     ocean_backup.in  out.cdl          roms_config.sh  work/
-hinig.h   ocean.in         output/          run_log
-ncfiles/  ocean.in~        output_TESTRUN/  spinup.sh
-
-# In my /hioekg-template
-build/    include/  oceanM*  roms_config.sh  varinfo.dat
-hioekg.h  ocean.in  output/  spinup.sh       work/
-
-# Copying over TF's /hinig-nlm-template/nest/ to my /hioekg-template
-
-cp -r /share/frinkraid2/tobiasf/hinig-nlm-template/nest /share/frinkraid2/lindsayv/hioekg-template
-
-# Copying over TF's /hinig-nlm-template/ncfiles/ to my /hioekg-template
-
-cp -r /share/frinkraid2/tobiasf/hinig-nlm-template/ncfiles /share/frinkraid2/lindsayv/hioekg-template 
-
-###################################
-# cd into my /nest and change certain things to point to Kbay:
-
-## I think I need to change the following in /ncfiles:
-inner_grid = seapy.model.asgrid(grid_path + "hinig-grid.nc")
-inner_pattern = "hinig-clim"
-bry_file = "../ncfiles/hinig-bry.nc"
-tide_file = "../ncfiles/hinig-tide.nc"
-
-## Also change to 30-60 day run:
-
-# Set up the start and ending days that we want to process
-start_day = 3074  # 2008-06-01
-end_day = 3804    # 2010-06-01
-pattern = re.compile('[1-9]\d{3}')
-
-## And finally, this:
-
-# 4. Make the initial conditions for day 3076, 2008-06-03
-ini_file = '../ncfiles/hinig-ini-03076.nc'
-if not os.path.isfile(ini_file):
-    seapy.roms.initial.from_roms(
-        'hinig-clim_03076.nc', ini_file, record=0, grid=inner_grid)
-
-###################################
-
-# In /ncfiles:
-
-hinig-frc_EDIT.nc  hinig-grid-Brian.nc  hinig-grid.nc  hinig-tide.nc
-
-# Need to replace with hioekg things.
-
-# Need hioekg-grid.nc (/share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/hioekg-grid.nc) and hioekg-tide.nc (/share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/tide.nc) and hioekg-frc.nc (/share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/hioekg-frc.nc)
-
-# Checking TF's hioekg.h (note: NO) and then BP's dir.
-
-# Haven't found anything in BP's dir yet. Maybe nano the forcing and tidal files here and see if we can fudge it (not for tidal; I don't think so re: frc either). Also check Dale's frinkraid2 dir...SEE ABOVE (has what I need)
-
-# /share/frinkraid2/dalep3/tides/tide_analysis/tide-frc13.nc has all MHI
+################
 
 cd /share/frinkraid2/lindsayv/hioekg-template/ncfiles
 
@@ -338,35 +285,7 @@ cp /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/hioekg-clim.nc .
 cp /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/hioekg-bry.nc .
 cp /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/ini.nc .
 
-
 ################
-
-## Edits to make in setup_inner_nest.py:
-
-inner_grid = seapy.model.asgrid(grid_path + "hioekg-grid.nc")
-inner_pattern = "hioekg-clim"
-bry_file = "../ncfiles/hioekg-bry.nc"
-tide_file = "../ncfiles/tide.nc"
-
-## Also change to 30-60 day run:
-
-## range for tide.nc: ?
-## range for frc: 6604 to 6611; 2018-01-30 to 2018-02-06
-## range for clim: same as frc
-## range for bry: ?
-
-# Set up the start and ending days that we want to process
-start_day = 6604  # 2018-01-30
-end_day = 6611    # 2018-02-06
-pattern = re.compile('[1-9]\d{3}')
-
-## And finally, this:
-
-# 4. Make the initial conditions for day 6604, 2018-01-30
-ini_file = '../ncfiles/ini.nc'
-if not os.path.isfile(ini_file):
-    seapy.roms.initial.from_roms(
-        'hinig-clim_03076.nc', ini_file, record=0, grid=inner_grid) # CHANGE
 
 ## NOTE: Lisa says that generating a new clim file is unnecessary as long as the ini.nc works. Leaving these notes here anyway..
 # I think I need to generate a new clim file for this one day using /share/frinkraid2/dalep3/pacioos/clim/make_clim.py
@@ -381,28 +300,25 @@ seapy.roms.interp.to_clim("/share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-n
 
 #### Attempting to run the nest script...
 
-qexec P4 python setup_inner_nest.py # died immediately
-# changed grid path to full (correct) vs ../ (wrong) # still no
+qexec P4 python setup_inner_nest.py 
 
-# need to have the outer grid be hiig.nc...looking for it in TF's dir..
+## The script requires:
 
-cd /share/frinkraid2/tobiasf # no, go look in Dale's
-cd /share/frinkraid2/lindsayv/hioekg-template/ncfiles/
-cp /share/frinkraid2/dalep3/pacioos/hinig-niihau/hiig-nlm-2008/hiig-grid.nc .
+# hiig-grid.nc (outer)
+# hioekg-grid.nc (inner)
+# hioekg_bry.nc
+# ini.nc or specified clim file (at end of script) *this was the issue- I thought we needed an ini.nc file that aligns with the fwd_001_*.nc dates in the script. However, I fudged it by simply putting another ini.nc in my /ncfiles subdirectory, and the script accepted it without a problem.
 
-# Trying again
+## The script produces:
+# hioekg_clim_*.nc
+# hioekg_bry_*.nc
+# hioekg_bry.nc (the metadata indicates that this is modified by the script; it is also required to initialize the script properly)
+# fwd_001_*_hioekg-grid_pmap.npz (here the wildcard specifies the starting day)
+# hioekg_tide.nc
 
-# run in python (log file?) chunk by chunk to find error
-# need to align dates in frc, clim, ini with fwd files; currently the former 3 are aligned 2018-01-30 and the fwd files are Jul 14 2016 - Aug 7 2017  
+#### Etc (once it runs on server for short timestep)
 
-# Checked files in dale's repo on F2 = no
-
-# Checking BP's /pacioos on F...
-
-# momentarily just copying over TF's hinig-nlm-template to my home dir so I have write access. I'm going to change the inner_nest.py to specify the kaneohe grid in my ncfiles dir. 
-# This is taking a while. go ahead and do this folder by folder or all at once at home
-cp -r /share/frinkraid2/tobiasf/hinig-nlm-template/ /share/frinkraid2/lindsayv/hinig-nlm-template
-
+fwd_001_03132.nc 2008-07-29
 
 
 
