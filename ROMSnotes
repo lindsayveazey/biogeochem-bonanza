@@ -17,6 +17,9 @@ nano name
 cp fileToCopyFromPWD /share/frinkraid2/lindsayv/folderToCopyInto
 cp /path/fileToCopy /share/frinkraid2/lindsayv/folderToCopyInto
 
+# Copy file from local to ssh
+scp /home/lindsay/Downloads/ROMS_Kaneohe.nc lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid2/lindsayv
+
 # Delete file
 rm /path/fileToDel
 
@@ -317,6 +320,8 @@ qexec python setup_inner_nest.py # qexec P4 etc...does not work, weirdly
 
 # On 9/7, script ran for timestep 3072 - 3132 (late May - late July 2008)
 # Success. 
+
+# Note that also on 9/7, setup_inner_frc (not needed for Kaneohe) was also tested. Chunk-by-chunk troubleshooting produced some odd, possibly indentation-related errors, but sending it straight to the cluster was successful.
 
 
 
