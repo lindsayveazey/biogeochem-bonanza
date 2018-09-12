@@ -1,6 +1,10 @@
 ## NCO (NetCDF Operators) notes
 # http://nco.sourceforge.net/nco.html
 
+export PATH=/share/apps/nco-4.7.6/bin:$PATH
+printf -v PATHIN "/share/frinkraid2/lindsayv/"
+printf -v PATHOUT "/share/frinkraid2/lindsayv/"
+
 # MERGE FILES: The simplest way to create the union of two files:
 
 ncks -A fl_1.nc fl_2.nc # fl_2.nc is the union
