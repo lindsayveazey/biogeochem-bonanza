@@ -9,6 +9,7 @@ printf -v PATHIN "/home/lindsay/Downloads/"
 printf -v PATHOUT "/home/lindsay/Downloads/"
 
 ## Server protocol
+
 # Copy files from local to server prior to ssh
 scp /home/lindsay/Downloads/ROMS_*.nc lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid2/lindsayv
 ssh -Y frinkiac
@@ -23,27 +24,30 @@ printf -v PATHOUT "/share/frinkraid2/lindsayv/"
 # This is a procedure to compute the temporal variance of u at all points in a single file. These files represent all months of available data at 2 depth strata (0.25 m = surface, 10 m), which was necessary due to the inability of the server to handle the full temporal series. 
 # 2018-07-01 to 2018-09-13
 
-# First, change all missing vals (-999) in original file 
-cdo setmisstoc,0 -setmissval,-999 ROMS_surface.nc ROMS_in_surface.nc
-cdo setmisstoc,0 -setmissval,-999 ROMS_10m.nc ROMS_in.nc
+# First, change all missing vals (-999) in original file (NOTE: neither of these function for my purposes currently) 
+#cdo setmisstoc,1e+36 -setmissval,-999 ROMS_surface.nc ROMS_in_surface.nc
+#cdo setmisstoc,"mss_val" -setmissval,-999 ROMS_10m.nc ROMS_in.nc
 
 #u
-ncwa -O -v u -a time ROMS_in.nc out.nc # Construct the temporal mean of u in the file out.nc
-ncbo -O -v u ROMS_in.nc out.nc out.nc # Overwrite out.nc with the anomaly (deviation from the mean)
-ncra -O -y avgsqr out.nc out.nc # Finally overwrite out.nc with the variance of itself
+ncwa -O -v u -a time ROMS_10m.nc out.nc # Construct the temporal mean of u in the file out.nc
+ncbo -O -v u ROMS_10m.nc out.nc out.nc # Overwrite out.nc with the anomaly (deviation from the mean)
+ncap2 -s 'where(u > 9.9e+36) u= "NA";' out.nc -O out.nc # Replace numerical NAs with text NAs
+ncwa -y avgsqr -v u -a time out.nc out.nc # Finally overwrite out.nc with the variance of itself
 
-ncwa -O -v u -a time ROMS_in_surface.nc out.nc # Construct the temporal mean of u in the file out.nc
-ncbo -O -v u ROMS_in_surface.nc out.nc out.nc # Overwrite out.nc with the anomaly (deviation from the mean)
-ncra -O -y avgsqr out.nc out.nc # Finally overwrite out.nc with the variance of itself
+ncwa -O -v u -a time ROMS_surface.nc out.nc # Construct the temporal mean of u in the file out.nc
+ncbo -O -v u ROMS_surface.nc out.nc out.nc # Overwrite out.nc with the anomaly (deviation from the mean)
+ncap2 -s 'where(u > 9.9e+36) u= "NA";' out.nc -O out.nc # Replace numerical NAs with text NAs
+ncwa -y avgsqr -v u -a time out.nc out.nc # Finally overwrite out.nc with the variance of itself
 
 #v
-ncwa -O -v v -a time ROMS_in.nc out.nc # Construct the temporal mean of u in the file out.nc
-ncbo -O -v v ROMS_in.nc out.nc out.nc # Overwrite out.nc with the anomaly (deviation from the mean)
-ncra -O -y avgsqr out.nc out.nc # Finally overwrite out.nc with the variance of itself
+ncwa -O -v v -a time ROMS_10m.nc out.nc # Construct the temporal mean of u in the file out.nc
+ncbo -O -v v ROMS_10m.nc out.nc out.nc # Overwrite out.nc with the anomaly (deviation from the mean)
+ncap2 -s 'where(v > 9.9e+36) v= "NA";' out.nc -O out.nc # Replace numerical NAs with text NAs
+ncwa -y avgsqr -v v -a time out.nc out.nc # Finally overwrite out.nc with the variance of itself
 
-ncwa -O -v v -a time ROMS_in_surface.nc out.nc # Construct the temporal mean of u in the file out.nc
-ncbo -O -v v ROMS_in_surface.nc out.nc out.nc # Overwrite out.nc with the anomaly (deviation from the mean)
-ncra -O -y avgsqr out.nc out.nc # Finally overwrite out.nc with the variance of itself
-
+ncwa -O -v v -a time ROMS_surface.nc out.nc # Construct the temporal mean of u in the file out.nc
+ncbo -O -v v ROMS_surface.nc out.nc out.nc # Overwrite out.nc with the anomaly (deviation from the mean)
+ncap2 -s 'where(v > 9.9e+36) v= "NA";' out.nc -O out.nc # Replace numerical NAs with text NAs
+ncwa -y avgsqr -v v -a time out.nc out.nc # Finally overwrite out.nc with the variance of itself
 
 # Can also use ‘-y rmssdn’ (rather than ‘-y rms’) in the final step to ensure the standard deviation is correctly normalized by one fewer than the number of time samples. 
