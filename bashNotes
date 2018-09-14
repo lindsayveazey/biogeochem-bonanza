@@ -59,6 +59,8 @@ cp -r /share/frinkraid2/tobiasf/hiig-nlm-reanalysis-cobalt/ /share/frinkraid2/li
 # Recursively send files from frinkiac to local
 scp -r lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid2/lindsayv/cobalt /home/lindsay/Documents/PowellLab/cobalt_test
 
+
+# Redo - https://medium.com/@pinglinh/how-to-use-git-pull-80ad77a8afc6
 cd /home/lindsay/Documents/PowellLab/cobalt_test/cobalt/hiig-nlm-reanalysis-cobalt 
 git init # Initialize repo
 git add . # Stage files for commit
