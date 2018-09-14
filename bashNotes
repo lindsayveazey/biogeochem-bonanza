@@ -51,3 +51,18 @@ ncap2 -s 'where(v > 9.9e+36) v= "NA";' out.nc -O out.nc # Replace numerical NAs 
 ncwa -y avgsqr -v v -a time out.nc out.nc # Finally overwrite out.nc with the variance of itself
 
 # Can also use ‘-y rmssdn’ (rather than ‘-y rms’) in the final step to ensure the standard deviation is correctly normalized by one fewer than the number of time samples. 
+
+#############################################################
+
+# Recursively copy TF's COBALT files to my dir
+cp -r /share/frinkraid2/tobiasf/hiig-nlm-reanalysis-cobalt/ /share/frinkraid2/lindsayv/cobalt 
+# Recursively send files from frinkiac to local
+scp -r lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid2/lindsayv/cobalt /home/lindsay/Documents/PowellLab/cobalt_test
+
+cd /home/lindsay/Documents/PowellLab/cobalt_test/cobalt/hiig-nlm-reanalysis-cobalt 
+git init # Initialize repo
+git add . # Stage files for commit
+git commit -m "Test commit"
+git remote add origin https://github.com/lindsayveazey/cobalt_test
+git remote -v # Verify the remote URL
+git push origin master # Pushes to remote repo
