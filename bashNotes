@@ -54,17 +54,30 @@ ncwa -y avgsqr -v v -a time out.nc out.nc # Finally overwrite out.nc with the va
 
 #############################################################
 
+# First: started a cobalt_test repo on GH
+# In Git Kraken, initialized and committed the README
+
 # Recursively copy TF's COBALT files to my dir
 cp -r /share/frinkraid2/tobiasf/hiig-nlm-reanalysis-cobalt/ /share/frinkraid2/lindsayv/cobalt 
 # Recursively send files from frinkiac to local
-scp -r lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid2/lindsayv/cobalt /home/lindsay/Documents/PowellLab/cobalt_test
+scp -r lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid2/lindsayv/cobalt/hiig-nlm-reanalysis-cobalt/nest /home/lindsay/Documents/PowellLab/cobalt_test
 
+cd /home/lindsay/Documents/PowellLab/cobalt_test
 
-# Redo - https://medium.com/@pinglinh/how-to-use-git-pull-80ad77a8afc6
-cd /home/lindsay/Documents/PowellLab/cobalt_test/cobalt/hiig-nlm-reanalysis-cobalt 
-git init # Initialize repo
 git add . # Stage files for commit
-git commit -m "Test commit"
+git commit -m "All commit- testing"
 git remote add origin https://github.com/lindsayveazey/cobalt_test
 git remote -v # Verify the remote URL
-git push origin master # Pushes to remote repo
+git push -u origin master # Pushes to remote repo
+
+###########################################################
+
+# Occasionally update my frinkiac home dir:
+
+pwd
+#/share/frinkraid2/lindsayv
+git clone ~powellb/roms/src
+
+
+
+
