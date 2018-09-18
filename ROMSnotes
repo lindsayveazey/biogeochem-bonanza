@@ -82,10 +82,10 @@ cd /share/frinkraid2/lindsayv/
 	# 2. ocean.in: sets all parameters. At the bottom there are glossary terms, as needed if I don't know what a variable does
 	# 3. include/ : used for code customization; Fortran code
 	# 4. roms_config.sh: compiles code; rmake loads it
-	# 5. hioekg.h: what parts of the code are being used. "rmake clean", then "rmake -j 2": Will generate oceanM* file- this is what I submit to the queue. This is a wrapper for 'make'; it loads the roms_config.sh file
+	# 5. hioekg.h: what parts of the code are being used. "rmake clean", then "rmake -j 2": Will generate oceanM* file- ***this is what I submit to the queue***. This is a wrapper for 'make'; it loads the roms_config.sh file
 	# 6. spinup.sh (the definitions in this file will override other options):
 
-ROMS_RUN_NAME="HIOEKG Testing"
+ROMS_RUN_NAME="HIOEKG_Testing"
 ROMS_EXEC=${PBS_O_WORKDIR}/oceanM  # WORKDIR is the queue
 ROMS_INPUT=${PBS_O_WORKDIR}/ocean.in  # Which input file to use?
 ROMS_FAIL_INPUT=${PBS_O_WORKDIR}/ocean-fail.in  # I set this to 0 per BP's request
@@ -108,7 +108,7 @@ ROMS_POST_BACKGROUND_SCRIPT=  # Run when cycle ends. Submitted to the queue inde
 
 # VARNAME in ocean.in should be set to a specific dir if it isn't in the hioekg-template dir.
 
-# If we update a file, go into the hioekg-template dir and then type rmake. It will recompile.
+# *****If we update a file, go into the hioekg-template dir and then type rmake. It will recompile.*****
 
 # The grid has 188 in the I direction, 88 in the J direction. I is divided into 8 sections, and J is divided into 8 sections.
 
@@ -257,7 +257,6 @@ Hout(idUsms) == F       ! sustr              surface U-stress
 ##########################################
 # 8/28-9 notes 
 
-# Copied TF hinig-nlm-template dir; he modified some bugs. Model is running.
 # In /nest, 2 py scripts:
 	# setup_inner_nest.py: IMPORTANT. Takes outer model --> interpolates to smaller grid. seapy is called.
 	# setup_inner_frc.py: not needed for Kaneohe. When we run the assimilation, this script generates new atmospheric forcing so the model better matches observations.
@@ -323,7 +322,61 @@ qexec python setup_inner_nest.py # qexec P4 etc...does not work, weirdly
 
 # Note that also on 9/7, setup_inner_frc (not needed for Kaneohe) was also tested. Chunk-by-chunk troubleshooting produced some odd, possibly indentation-related errors, but sending it straight to the cluster was successful.
 
+#######
 
+# ROMS workflow. Using the hioekg-template dir...
+
+1. cp tf's hioekg-template
+2. In roms_config.sh: updated the building configuration file pathway
+3. In spinup.sh: no update
+4. In varinfo.dat: no update
+5. In hioekg.h: no update
+6. nano current_day (6750)
+7. cd /build/ and cd /include: lots of accessory files, no update
+8. cd /output/: deleted all for clean view
+9. In ocean.in: ensured all pathways to nc files are correct (currently all point to Dale's dir), no update
+10. Did update one file so typed "rmake clean" to recompile...then "rmake j2"
+11. "cycle_roms -d spinup.sh" gave the following error:
+"ncks: ERROR file /share/frinkraid2/lindsayv/hioekg-template/work/ini.nc neither exists locally nor matches remote filename patterns
+cp: cannot stat `/share/frinkraid2/lindsayv/hioekg-template/work/ini.nc': No such file or directory"
+
+Going to find ini.nc...
+
+12. mkdir ncfiles
+cd /share/frinkraid2/lindsayv/hioekg-template/ncfiles
+
+cp /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/hioekg-grid.nc .
+cp /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/tide.nc .
+cp /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/hioekg-frc.nc .
+cp /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/hioekg-clim.nc .
+cp /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/hioekg-bry.nc .
+cp /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/ini.nc .
+
+13. Didn't work, same error. Attempting to copy ini.nc into /work, then trying again..
+
+cd work
+cp /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/ini.nc .
+
+No! The copied ini.nc file disappears.
+
+### Notes:
+
+When trying to submit to the queue within TF's dir, I get some informative errors. The script mkdir /work, also makes the varinfo.dat and ocean.in files within there. Seems to create ini.nc as well...
+
+1. In ocean.in, changed DSTART to 6750
+2. In spinup.sh, changed START_DAY to 6750
+
+# Changed back to 6744. Changed current_day to 6744.
+
+3. cp -r /share/frinkraid2/tobiasf/hioekg-template/output .
+
+4.  last  data time record available is for day: 2018-06-25 00:00:00.00
+                   but  data is needed to finish run until day: 2018-06-26 00:00:00.00
+
+# Changed spinup.sh END_DAY to 6747, RUN_DAYS to 4
+
+# cycle_roms spinup.sh - working now!
+# Be sure to check the run_log file in the work dir. Or the faillog file in output if it doesn't go. It's working now, so- good.
 
 
 
