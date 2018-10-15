@@ -131,6 +131,39 @@ else:
 if (not unsubscribed) and (location == "USA" or location == "CAN"):
     print("send email")
 
+# tag counter (HTML); also a multi-inclusive for loop
+tokens = ['<greeting>', 'Hello World!', '</greeting>']
+
+count = 0
+for token in tokens:
+    if token[0] == '<' and token[-1] == '>':
+        count += 1
+
+print(count)
 
 
+# Adding print() debugging statements as a loop runs is helpful
+# break terminates a loop
+# continue skips a particular iteration; example below:
+
+# skips an iteration when adding an item would exceed the limit
+# breaks the loop if weight is exactly the value of the limit
+print("\nMETHOD 2")
+weight = 0
+items = []
+for cargo_name, cargo_weight in manifest:
+    print("current weight: {}".format(weight))
+    if weight >= 100:
+        print("  breaking from the loop now!")
+        break
+    elif weight + cargo_weight > 100:
+        print("  skipping {} ({})".format(cargo_name, cargo_weight))
+        continue
+    else:
+        print("  adding {} ({})".format(cargo_name, cargo_weight))
+        items.append(cargo_name)
+        weight += cargo_weight
+
+print("\nFinal Weight: {}".format(weight))
+print("Final Items: {}".format(items))
 
