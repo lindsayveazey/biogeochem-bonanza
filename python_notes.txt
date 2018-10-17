@@ -167,3 +167,9 @@ for cargo_name, cargo_weight in manifest:
 print("\nFinal Weight: {}".format(weight))
 print("Final Items: {}".format(items))
 
+# list comprehensions are a concise workaround vs. for loops
+# python-specific
+new_list = [expression for item in list]
+squares = [x**2 for x in range(9) if x % 2 == 0 else x + 3]
+
+
