@@ -173,3 +173,13 @@ new_list = [expression for item in list]
 squares = [x**2 for x in range(9) if x % 2 == 0 else x + 3]
 
 
+# function definition
+
+def function_name(input1, input2):
+    defining_new_var
+    return input1 * input2/new_var # return provides a value we can store and work with later
+
+# if there is a common value for a variable, but we still want the function to be customizable, we can write (input 1 = 5). input will be evaluated as 5 unless specified otherwise.
+
+    
+
