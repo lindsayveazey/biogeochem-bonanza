@@ -1,0 +1,22 @@
+### Test validation 10/25
+
+# ssh
+python
+# start of py script
+# referencing /share/frinkraid2/dalep3/pacioos/hinig-niihau/hinig-nlm-2008/interp_to_zlevel.py
+# https://github.com/powellb/seapy/blob/master/seapy/roms/interp.py ..search zgrid...stopped at nx on 10/25
+
+import seapy
+import numpy as np
+
+depths = np.array([1,10,50,100,125,150,200,250,300,400,500,600,700,800,900,1000,1500,2000])
+nx = 2*0.1/111.0
+with np.load('hinig_zlevel_pmap.npz') as dat:
+    pmap = dat['pmap'][()]
+
+for f in seapy.list_files('hiig_cobalt_avg.nc'):
+    seapy.roms.interp.to_zgrid(f, f.replace('his','zlevel'), depth=depths, threads=4, nx=nx, ny=nx, pmap=pmap)
+
+
+
+grid = seapy.model.asgrid("hiig_cobalt_avg.nc")
