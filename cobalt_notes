@@ -1,4 +1,12 @@
-### Test validation 10/25
+### Test validation 10/26
+
+# note: /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioeg-nlm-2014-2015/hiig_his_05108_hioeg-grid_pmap.npz
+# note: /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/hioekg_his_0001_hioekg-zgrid_pmap.npz
+# note: /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/setup/hiig_his_hioekg-grid_pmap.npz
+# note: /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/setup/hioekg_riverinfo.npz 
+# note: /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/setup/kaneohe_swan_lon_lat.npz 
+# note: /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/setup/kaneohe_swan_hioekg_pmap.npz
+
 
 # ssh
 cp /share/frinkraid2/tobiasf/hiig-nlm-reanalysis-cobalt/output_TEST_PHASE/RUN_01/hiig_cobalt_avg.nc .
@@ -13,14 +21,55 @@ import numpy as np
 depths = np.array([1,10,50,100,125,150,200,250,300,400,500,600,700,800,900,1000,1500,2000])
 nx = 2*0.1/111.0 # decorrelation length-scale for OA (same units as source data)
 # for now keeping nx = same as DP wrote
-# below, commenting out the pmap code; we may not have a comparable .npz
-# also removed pmap=pmap in for loop
+
+# below, commenting out the pmap code; need to find comparable one
+# next: examining this .npz file:
+cd /share/frinkraid2/dalep3/pacioos/hinig-niihau/hinig-nlm-2008/
+python
+import numpy as np
+with np.load('hiig_his_hioekg-grid_pmap.npz') as dat:
+    pmap = dat['pmap'][()]
+# I see this is a dict w/ len = 3
+# Found below script here: /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/setup/make_hioekg_river.py
+import numpy as np
+import river
+
+##KBAY
+#Create dictionary of river info for grid
+g = seapy.model.asgrid('/share/frinkraid2/dalep3/grids/hioekg-grid.nc')
+rivers = ['waikane', 'waiahole','waihee','haiku']
+usgs = ['16294900', '16294100', '16284200', '16275000']
+flag = [3,3,3,3]
+direction = [1, 1, 0, 1]
+flow_direction=[1,1,-1,1]
+x = [48,62,88,121]
+y = [27,24,8,10]
+vshape=[1.0/g.n]*g.n
+transport=[0.37,0.88,0.25,0.07]
+temp=[20,20,20,20]
+salt = [18,18,18,18]
+entero=[0.01,0.01,0.01,0.01]
+multiplier=[1,1,1,1]
+source=['discharge','discharge','discharge','discharge']
+rivinfo={}
+for i,k in enumerate(rivers):
+    default=river.defaults(transport[i],temp[i],salt[i],entero[i])
+    rivinfo[k] = river.river_info(usgs[i],direction[i],flow_direction[i],flag[i$
+
+fname = 'hioekg_riverinfo.npz'
+
+np.savez(fname,rivinfo=rivinfo)
+
+
+
+
+
+
+
 #with np.load('hinig_zlevel_pmap.npz') as dat:
 #    pmap = dat['pmap'][()]
 
 for f in seapy.list_files('hiig_cobalt_avg.nc'):
-    seapy.roms.interp.to_zgrid(f, f.replace('his','zlevel'), depth=depths, threads=4, nx=nx, ny=nx)
+    seapy.roms.interp.to_zgrid(f, f.replace('his','zlevel'), depth=depths, threads=4, nx=nx, ny=nx, pmap=pmap)
 
 
-
-#grid = seapy.model.asgrid("hiig_cobalt_avg.nc")
