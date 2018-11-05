@@ -1,4 +1,4 @@
-### Test validation 11/1
+### Test validation: late Oct. - 11/5
 # Cannot use the Niihau pmap as it is called in DP's script (of course). Substituting the extant pmap (hinig_zlevel_pmap.npz) called in the script results in this error: 
 '''Traceback (most recent call last):
   File "<stdin>", line 2, in <module>
@@ -10,6 +10,20 @@ KeyError: 'time''''
 
 # Next: navigating to TF's dir to look for any npz...found one in /python. Emailing to ask advice. I receive the exact same key error regarding 'time' whether I remove pmap mentions or try to use the existing Niihau pmap.
 
+### From Brian: 11/5
+# ssh
+python
+import seapy
+import numpy as np
+
+depths = np.array([1,10,50,100,125,150,200,250,300,400,500]) # shortening array to overcome error?
+nx = 0.36
+ny = nx
+# nx and ny are roughly 4x the resolution of the destination in degrees
+# 1 degree = 111 km
+# = .036 degrees in 4 km
+
+seapy.roms.interp.to_zgrid('hiig_cobalt_avg.nc', 'hiig_interp.nc', depth=depths, threads=4, nx=nx, ny=ny)
 
 
 # ssh
