@@ -1,44 +1,46 @@
 ### Test validation: late Oct. - 11/5
-# Cannot use the Niihau pmap as it is called in DP's script (of course). Substituting the extant pmap (hinig_zlevel_pmap.npz) called in the script results in this error: 
-'''Traceback (most recent call last):
-  File "<stdin>", line 2, in <module>
-  File "/share/apps/miniconda3/envs/frinkiac/lib/python3.6/site-packages/seapy-0.3-py3.6-linux-x86_64.egg/seapy/roms/interp.py", line 620, in to_zgrid
-    seapy.roms.num2date(ncsrc, time, records), ncout, "time")
-  File "/share/apps/miniconda3/envs/frinkiac/lib/python3.6/site-packages/seapy-0.3-py3.6-linux-x86_64.egg/seapy/roms/lib.py", line 338, in date2num
-    calendar, _ = _get_calendar(nc.variables[tvar])
-KeyError: 'time''''
-
-# Next: navigating to TF's dir to look for any npz...found one in /python. Emailing to ask advice. I receive the exact same key error regarding 'time' whether I remove pmap mentions or try to use the existing Niihau pmap.
-
 ### From Brian: 11/5
-# ssh
-python
-import seapy
-import numpy as np
 
-depths = np.array([1,10,50,100,125,150,200,250,300,400,500]) # shortening array to overcome error?
-nx = 0.36
-ny = nx
+# One of my warnings notes that "nx or ny values are too large for stable OA"
+# DP's nx: 2*.1/111
+# nx, ny were too large at 0.36, too small at 0.036
+# OA warning eliminated: 4*4/111 (4 km x 4 km)
 # nx and ny are roughly 4x the resolution of the destination in degrees
 # 1 degree = 111 km
-# = .036 degrees in 4 km
+# Trying to compose a palatable array...
+'''   File "<stdin>", line 1, in <module>
+  File "/share/apps/miniconda3/envs/frinkiac/lib/python3.6/site-packages/seapy-0.3-py3.6-linux-x86_64.egg/seapy/roms/interp.py", line 627, in to_zgrid
+    z_mask=True, pmap=pmap)
+  File "/share/apps/miniconda3/envs/frinkiac/lib/python3.6/site-packages/seapy-0.3-py3.6-linux-x86_64.egg/seapy/roms/interp.py", line 290, in __interp_grids
+    ncout.variables[dest][outr, :, :] = ndata
+  File "netCDF4/_netCDF4.pyx", line 4418, in netCDF4._netCDF4.Variable.__setitem__
+  File "/share/apps/miniconda3/envs/frinkiac/lib/python3.6/site-packages/numpy/ma/core.py", line 3717, in filled
+    fill_value = _check_fill_value(fill_value, self.dtype)
+  File "/share/apps/miniconda3/envs/frinkiac/lib/python3.6/site-packages/numpy/ma/core.py", line 473, in _check_fill_value
+    raise TypeError(err_msg % ndtype)
+TypeError: Cannot set fill value of string with array of dtype float64
+'''
 
-seapy.roms.interp.to_zgrid('hiig_cobalt_avg.nc', 'hiig_interp.nc', depth=depths, threads=4, nx=nx, ny=ny)
-
+# Is my array too large? Shortening it to just upper 200...
 
 # ssh
-cp /share/frinkraid2/tobiasf/hiig-nlm-reanalysis-cobalt/output_TEST_PHASE/RUN_01/hiig_cobalt_avg.nc .
 python
-# start of py script
-# referencing /share/frinkraid2/dalep3/pacioos/hinig-niihau/hinig-nlm-2008/interp_to_zlevel.py
-# https://github.com/powellb/seapy/blob/master/seapy/roms/interp.py 
-
+import os
 import seapy
-import numpy as np
+
+depths = np.array([1,10,50,100,125,150,200])
+nx = 4*4/111
+ny = 4*4/111
+
+seapy.roms.interp.to_zgrid('hiig_cobalt_avg.nc', 'out.nc', depth=depths, threads=4, nx=nx, ny=ny)
+
+# Latest error: egg/seapy/roms/ncgen.py:98: UserWarning: WARNING: missing_value cannot be safely cast to variable dtype
+
+###########################################################################################
 
 depths = np.array([1,10,50,100,125,150,200,250,300,400,500,600,700,800,900,1000,1500,2000])
 nx = 2*0.1/111.0 # decorrelation length-scale for OA (same units as source data)
-# for now keeping nx = same as DP wrote
+
 with np.load('hinig_zlevel_pmap.npz') as dat:
     pmap = dat['pmap'][()] 
 
