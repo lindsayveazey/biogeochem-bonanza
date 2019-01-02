@@ -11,8 +11,9 @@ printf -v PATHOUT "/home/lindsay/Downloads/"
 ## Server protocol
 
 # Copy files from local to server prior to ssh
-scp /home/lindsay/Downloads/ROMS_*.nc lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid2/lindsayv
-ssh -Y frinkiac
+scp C:/Users/linds/Downloads/hioekg_riverinfo.npz lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv
+scp C:/Users/linds/Downloads/river.py lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv
+ssh -Y lindsayv@frinkiac.soest.hawaii.edu
 
 # Set env
 export PATH=/share/apps/nco-4.7.6/bin:$PATH
