@@ -20,6 +20,9 @@ export PATH=/share/apps/nco-4.7.6/bin:$PATH
 printf -v PATHIN "/share/frinkraid2/lindsayv/"
 printf -v PATHOUT "/share/frinkraid2/lindsayv/"
 
+# Rename a file
+mv river.py bp_river.py
+
 #############################################################
 
 # This is a procedure to compute the temporal variance of u at all points in a single file. These files represent all months of available data at 2 depth strata (0.25 m = surface, 10 m), which was necessary due to the inability of the server to handle the full temporal series. 

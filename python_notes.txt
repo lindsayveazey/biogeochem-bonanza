@@ -181,5 +181,12 @@ def function_name(input1, input2):
 
 # if there is a common value for a variable, but we still want the function to be customizable, we can write (input 1 = 5). input will be evaluated as 5 unless specified otherwise.
 
+############ 1/8: Notes on debugging bp_river.py ############
+
+# Dale's river.py must be in the dir when bp_river.py is called, or the river module will not load successfully
+
+# In DP's river.py, changed line 174: create_river to create_psource (based on https://github.com/powellb/seapy/blob/master/seapy/roms/ncgen.py)
+
+
     
 
