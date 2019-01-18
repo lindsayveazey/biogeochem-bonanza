@@ -72,7 +72,7 @@ ls # check files
 # cp -r /share/frinkraid/powellb/pacioos/hioekg-template .  # copy this folder to my dir
 # mkdir roms
 cd ./roms  # The ./folder notation abbreviates my typing
-# git clone ~powellb/roms/src  # Cloned BP's repo
+# git clone ~powellb/roms/src  # Cloned BP's repo # or /cobalt
 cd ./src
 git pull  # Updates /roms/src
 cd /share/frinkraid2/lindsayv/
