@@ -1,105 +1,37 @@
-### Test validation: late Oct. - 11/5
-### From Brian: 11/5
+# from bio_cobalt.in: (search LtracerSrc)
 
-# One of my warnings notes that "nx or ny values are too large for stable OA"
-# DP's nx: 2*.1/111
-# nx, ny were too large at 0.36, too small at 0.036
-# OA warning eliminated: 4*4/111 (4 km x 4 km)
-# nx and ny are roughly 4x the resolution of the destination in degrees
-# 1 degree = 111 km
-# Trying to compose a palatable array...
-'''   File "<stdin>", line 1, in <module>
-  File "/share/apps/miniconda3/envs/frinkiac/lib/python3.6/site-packages/seapy-0.3-py3.6-linux-x86_64.egg/seapy/roms/interp.py", line 627, in to_zgrid
-    z_mask=True, pmap=pmap)
-  File "/share/apps/miniconda3/envs/frinkiac/lib/python3.6/site-packages/seapy-0.3-py3.6-linux-x86_64.egg/seapy/roms/interp.py", line 290, in __interp_grids
-    ncout.variables[dest][outr, :, :] = ndata
-  File "netCDF4/_netCDF4.pyx", line 4418, in netCDF4._netCDF4.Variable.__setitem__
-  File "/share/apps/miniconda3/envs/frinkiac/lib/python3.6/site-packages/numpy/ma/core.py", line 3717, in filled
-    fill_value = _check_fill_value(fill_value, self.dtype)
-  File "/share/apps/miniconda3/envs/frinkiac/lib/python3.6/site-packages/numpy/ma/core.py", line 473, in _check_fill_value
-    raise TypeError(err_msg % ndtype)
-TypeError: Cannot set fill value of string with array of dtype float64
-'''
-
-# Is my array too large? Shortening it to just upper 200...
-
-# ssh
-python
-import os
-import seapy
-
-depths = np.array([1,10,50,100,125,150,200])
-nx = 4*4/111
-ny = 4*4/111
-
-seapy.roms.interp.to_zgrid('hiig_cobalt_avg.nc', 'out.nc', depth=depths, threads=4, nx=nx, ny=ny)
-
-# Latest error: egg/seapy/roms/ncgen.py:98: UserWarning: WARNING: missing_value cannot be safely cast to variable dtype
-
-###########################################################################################
-
-depths = np.array([1,10,50,100,125,150,200,250,300,400,500,600,700,800,900,1000,1500,2000])
-nx = 2*0.1/111.0 # decorrelation length-scale for OA (same units as source data)
-
-with np.load('hinig_zlevel_pmap.npz') as dat:
-    pmap = dat['pmap'][()] 
-
-for f in seapy.list_files('hiig_cobalt_avg.nc'):
-    seapy.roms.interp.to_zgrid(f, f.replace('his','zlevel'), depth=depths, threads=4, nx=nx, ny=nx, pmap=pmap)
-
-
-
-
-# Examined this .npz file:
-cd /share/frinkraid2/dalep3/pacioos/hinig-niihau/hinig-nlm-2008/
-python
-import numpy as np
-with np.load('hiig_his_hioekg-grid_pmap.npz') as dat:
-    pmap = dat['pmap'][()]
-
-
-# I see this is a dict w/ len = 3
-# Found below script here: /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/setup/make_hioekg_river.py
-import numpy as np
-import river
-
-##KBAY
-#Create dictionary of river info for grid
-g = seapy.model.asgrid('/share/frinkraid2/dalep3/grids/hioekg-grid.nc')
-rivers = ['waikane', 'waiahole','waihee','haiku']
-usgs = ['16294900', '16294100', '16284200', '16275000']
-flag = [3,3,3,3]
-direction = [1, 1, 0, 1]
-flow_direction=[1,1,-1,1]
-x = [48,62,88,121]
-y = [27,24,8,10]
-vshape=[1.0/g.n]*g.n
-transport=[0.37,0.88,0.25,0.07]
-temp=[20,20,20,20]
-salt = [18,18,18,18]
-entero=[0.01,0.01,0.01,0.01]
-multiplier=[1,1,1,1]
-source=['discharge','discharge','discharge','discharge']
-rivinfo={}
-for i,k in enumerate(rivers):
-    default=river.defaults(transport[i],temp[i],salt[i],entero[i])
-    rivinfo[k] = river.river_info(usgs[i],direction[i],flow_direction[i],flag[i$
-
-fname = 'hioekg_riverinfo.npz'
-
-np.savez(fname,rivinfo=rivinfo)
-
-
-
-# Kaneohe pmaps (for later)
-# note: /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioeg-nlm-2014-2015/hiig_his_05108_hioeg-grid_pmap.npz
-# note: /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/hioekg_his_0001_hioekg-zgrid_pmap.npz
-# note: /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/setup/hiig_his_hioekg-grid_pmap.npz
-# note: /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/setup/hioekg_riverinfo.npz 
-# note: /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/setup/kaneohe_swan_lon_lat.npz 
-# note: /share/frinkraid2/dalep3/pacioos/kaneohe_bay/hioekg-nlm-test/setup/kaneohe_swan_hioekg_pmap.npz
-
-
-
+nsm Small Phytoplankton Nitrogen
+nlg Large Phytoplankton Nitrogen
+ndi Diazotroph Nitrogen
+nsmz Small Zooplankton Nitrogen
+nmdz Medium-sized zooplankton Nitrogen
+nlgz large Zooplankton Nitrogen
+ldon labile DON
+sldon Semilabile DON
+srdon Semi-Refractory DON
+nbact bacterial
+nh4 Ammonia
+no3 Nitrate
+ndet ndet
+sio4 Silicate
+silg Large Phytoplankton Silicon
+sidet Detrital Silicon
+cadet_calc Detrital CaCO3
+cadet_arag Detrital CaCO3
+lith Lithogenic Aluminosilicate
+lithdet lithdet
+ldop labile DOP
+sldop Semilabile DOP
+srdop Semi-Refractory DOP
+po4 Phosphate
+pdet Detrital Phosphorus
+fesm Small Phytoplankton Iron
+fedi Diazotroph Iron
+felg Large Phytoplankton Iron
+fed Dissolved Iron
+fedet Detrital Iron
+o2 Oxygen
+dic Dissolved Inorganic Carbon
+alk Alkalinity
 
 
