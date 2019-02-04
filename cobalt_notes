@@ -1,71 +1,44 @@
-# Rivers: Heeia (16275000), Waiahole (16294100),
-# Waihee (16284200), Waikane (16294900)
-# from bio_cobalt.in: (search LtracerSrc)
+`po4 0.0000007
+`pdet 0.00000023
+`dic 0.0014
+`alk 0.00141
+`sio4 0.000157
+`nh4 0.00000034
+`no3 0.0000048
 
-# "Three categories of DOM availability are defined (labile, semi-labile, and refractory) based on general timescales of biological utilization (Kirchman et al. 1993, Carlson and Ducklow 1995). By this definition, labile DOM is utilized on timescales of hours to weeks. Semi-labile DOM is utilized on timescales of months to years, and refractory DOM is utilized on timescales of centuries to millennia." (Davis & Benner 2007)
-
-# "A small fraction (8.6%) of the stream water DOC was labile, travelling 238 m downstream before being taken up. The remaining bioavailable stream water DOC was semi-labile and transported 4.5 km downstream before being taken up. These uptake lengths suggest that the labile DOC is an energy source within a stream reach, while the semi-labile DOC is exported out of the reach to larger rivers and the downstream estuary, where it may provide energy for marine microbial communities or simply be exported to the oceans." (Kaplan et al. 2008)
-
-# DON: 5.4
-# DOP: 0.19
-
-nsm Small Phytoplankton Nitrogen
-nlg Large Phytoplankton Nitrogen
-ndi Diazotroph Nitrogen
-nsmz Small Zooplankton Nitrogen
-nmdz Medium-sized zooplankton Nitrogen
-nlgz large Zooplankton Nitrogen
-ldon labile DON
-sldon Semilabile DON
-srdon Semi-Refractory DON
-nbact bacterial
-nh4 Ammonia: 0.34 10−6 mol/L (Hoover & Mackenzie 2009) 
-no3 Nitrate: 4.8 10−6 mol/L (Hoover & Mackenzie 2009)
-ndet ndet
-sio4 Silicate
-silg Large Phytoplankton Silicon
-sidet Detrital Silicon
-cadet_calc Detrital CaCO3
-cadet_arag Detrital CaCO3
-lith Lithogenic Aluminosilicate
-lithdet lithdet
-ldop labile DOP
-sldop Semilabile DOP
-srdop Semi-Refractory DOP
-po4 Phosphate: "measured as soluble reactive phosphorus (SRP) but often assumed equivalent to PO4^3- (phosphate)" 0.7 10−6 mol/L  (Hoover & Mackenzie 2009)
-pdet Detrital Phosphorus: "Particulate organic phosphorus (POP) calculated by difference from total and inorganic constituents" 0.73 10−6 mol/L (calculated from Table 2) or 0.23% of SPM or 0.8 kmoles/km per yr (Hoover & Mackenzie 2009)
-fesm Small Phytoplankton Iron
-fedi Diazotroph Iron
-felg Large Phytoplankton Iron
-fed Dissolved Iron
-fedet Detrital Iron
-o2 Oxygen
-dic Dissolved Inorganic Carbon
-alk Alkalinity
-
-# from setup_inner_frc.py:
-
-default_vals = {
-    'river_temp': 25,
-    'river_salt': 5,
-    'river_ldon': 0.0,
-    'river_ldop': 0.0,
-    'river_no3': 0.0,
-    'river_po4': 0.0,
-    'river_fed': 99
-}
-
-if not os.path.exists(river_file):
-    # Generate the river file
-    nc = seapy.roms.psource.create(river_file, s_rho=grid.n, river=rivers)
-
-    # Create the COBALT variables we want
-    seapy.roms.cobalt.add_psource_var(
-        nc, ['ldon', 'ldop', 'no3', 'po4', 'fed'])
-
-
-# Need to edit ^
-
-# Review Hoover & Mackenzie 2009
+LBC(isTvar) ==   
+1 nsm Small Phytoplankton Nitrogen
+2 nlg Large Phytoplankton Nitrogen
+3 ndi Diazotroph Nitrogen
+4 nsmz Small Zooplankton Nitrogen
+5 nmdz Medium-sized zooplankton Nitrogen
+6 nlgz large Zooplankton Nitrogen
+7 ldon labile DON
+8 sldon Semilabile DON
+9 srdon Semi-Refractory DON
+10 nbact bacterial
+11 nh4 Ammonia
+12 no3 Nitrate
+13 ndet ndet
+14 sio4 Silicate
+15 silg Large Phytoplankton Silicon
+16 sidet Detrital Silicon
+17 cadet_calc Detrital CaCO3
+18 cadet_arag Detrital CaCO3
+19 lith Lithogenic Aluminosilicate
+20 lithdet lithdet
+21 ldop labile DOP
+22 sldop Semilabile DOP
+23 srdop Semi-Refractory DOP
+24 po4 Phosphate
+25 pdet Detrital Phosphorus
+26 fesm Small Phytoplankton Iron
+27 fedi Diazotroph Iron
+28 felg Large Phytoplankton Iron
+29 fed Dissolved Iron
+30 fedet Detrital Iron
+31 o2 Oxygen
+32 dic Dissolved Inorganic Carbon
+33 alk Alkalinity
 
 
