@@ -27,6 +27,20 @@ printf -v PATHOUT "/share/frinkraid2/lindsayv/"
 # Rename a file
 mv river.py bp_river.py
 
+# Change which server if one is busy
+
+# F2 has 4 nodes with 16 CPUs each. So, assuming you are running on 64 CPUs, you need to make changes in two places:
+
+# In spinup.sh:
+ROMS_QUEUE="nodes=4:ppn=16"
+ROMS_QUEUE_NAME="F2"
+
+#In ocean.in:
+      NtileI == 16                              ! I-direction partition
+      NtileJ == 4                               ! J-direction partition
+
+# So basically 4x16 for "F2" instead of 8x8 for "default".
+
 #############################################################
 
 # This is a procedure to compute the temporal variance of u at all points in a single file. These files represent all months of available data at 2 depth strata (0.25 m = surface, 10 m), which was necessary due to the inability of the server to handle the full temporal series. 
