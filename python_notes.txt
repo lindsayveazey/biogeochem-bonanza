@@ -7,6 +7,29 @@ ipython
 # START JUPYTER: 
 jupyter notebook
 http://localhost:8900/tree? # to access jupyter nb on frinkiac
+
+###########################################
+# Installing conda on the Gazelle
+
+# Download the Python 2.7 64-Bit Command Line Installer (.sh extension) from https://www.anaconda.com/distribution/#download-section
+
+cd /tmp
+
+# Download the Anaconda link using curl. Note that I downloaded a MacOS link the first time...
+
+curl -0 https://repo.anaconda.com/archive/Anaconda*.sh
+
+# Verify the installer with the SHA-256 checksum
+
+sha256sum Anaconda3-5.0.1-Linux-x86_64.sh
+
+# Ensure the .sh is present in the file system
+ls -lt 
+
+# Install (keep the bash command)
+
+bash Anaconda3-5.0.1-Linux-x86_64.sh
+
 ###########################################
 https://jupyter.readthedocs.io/en/latest/running.html # running 
 
