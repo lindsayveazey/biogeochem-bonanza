@@ -1,44 +1,38 @@
-`po4 0.0000007
-`pdet 0.00000023
-`dic 0.0014
-`alk 0.00141
-`sio4 0.000157
-`nh4 0.00000034
-`no3 0.0000048
+
 
 LBC(isTvar) ==   
-1 nsm Small Phytoplankton Nitrogen
-2 nlg Large Phytoplankton Nitrogen
-3 ndi Diazotroph Nitrogen
-4 nsmz Small Zooplankton Nitrogen
-5 nmdz Medium-sized zooplankton Nitrogen
-6 nlgz large Zooplankton Nitrogen
-7 ldon labile DON
-8 sldon Semilabile DON
-9 srdon Semi-Refractory DON
-10 nbact bacterial
-11 nh4 Ammonia
-12 no3 Nitrate
-13 ndet ndet
-14 sio4 Silicate
-15 silg Large Phytoplankton Silicon
-16 sidet Detrital Silicon
-17 cadet_calc Detrital CaCO3
-18 cadet_arag Detrital CaCO3
-19 lith Lithogenic Aluminosilicate
-20 lithdet lithdet
-21 ldop labile DOP
-22 sldop Semilabile DOP
-23 srdop Semi-Refractory DOP
-24 po4 Phosphate
-25 pdet Detrital Phosphorus
-26 fesm Small Phytoplankton Iron
-27 fedi Diazotroph Iron
-28 felg Large Phytoplankton Iron
-29 fed Dissolved Iron
-30 fedet Detrital Iron
-31 o2 Oxygen
-32 dic Dissolved Inorganic Carbon
-33 alk Alkalinity
+1 nsm Small Phytoplankton Nitrogen: river_nsm (mol/kg)
+2 nlg Large Phytoplankton Nitrogen: river_nlg (mol/kg)
+3 ndi Diazotroph Nitrogen: river_ndi (mol/kg)
+4 nsmz Small Zooplankton Nitrogen: river_nsmz (mol/kg)
+5 nmdz Medium-sized zooplankton Nitrogen: river_nmdz (mol/kg)
+6 nlgz large Zooplankton Nitrogen: river_nlgz (mol/kg)
+7 ldon labile DON: river_ldon (mol/kg)
+8 sldon Semilabile DON: river_sldon (mol/kg)
+9 srdon Semi-Refractory DON: river_srdon (mol/kg)
+10 nbact bacterial: river_nbact (mol/kg)
+11 nh4 Ammonia: river_nh4 (mol/kg)
+12 no3 Nitrate: river_no3 (mol/kg)
+13 ndet ndet: river_ndet (mol/kg)
+14 sio4 Silicate: river_sio4 (mol/kg)
+15 silg Large Phytoplankton Silicon: river_silg (mol/kg)
+16 sidet Detrital Silicon: river_sidet (mol/kg)
+17 cadet_calc Detrital CaCO3river_cadet_calc (mol/kg)
+18 cadet_arag Detrital CaCO3: river_cadet_arag (mol/kg)
+19 lith Lithogenic Aluminosilicate: river_lith (mol/kg)
+20 lithdet lithdet: river_lithdet (mol/kg)
+21 ldop labile DOP: river_ldop (mol/kg)
+22 sldop Semilabile DOP: river_sldop (mol/kg)
+23 srdop Semi-Refractory DOP: river_srdop (mol/kg)
+24 po4 Phosphate: river_po4 (mol/kg)
+25 pdet Detrital Phosphorus: river_pdet (mol/kg)
+26 fesm Small Phytoplankton Iron: river_fesm (mol/kg)
+27 fedi Diazotroph Iron: river_fedi (mol/kg)
+28 felg Large Phytoplankton Iron: river_felg (mol/kg)
+29 fed Dissolved Iron: river_fed (mol/kg)
+30 fedet Detrital Iron: river_fedet (mol/kg)
+31 o2 Oxygen: river_o2 (mol/kg)
+32 dic Dissolved Inorganic Carbon: river_dic (mol/kg)
+33 alk Alkalinity: river_alk (mol/kg)
 
 
