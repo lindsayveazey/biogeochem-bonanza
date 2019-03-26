@@ -10,17 +10,32 @@ hioekg-grid.nc
 hioekg-tide.nc
 ini-03664.nc
 
+# change ocean by one day (= 86400 seconds)
+ncap2 -s 'ocean_time=ocean_time+86400' ini-04749.nc his-ini-04749.nc 
 
-ncap2 -s 'ocean_time=ocean_time-777600' ini-03664.nc ini-03664.nc 
+----- Turn off the rivers:
+# ocean.in
 
-
-
-     LuvSrc == T                          ! horizontal momentum transport
+    LuvSrc == T                          ! horizontal momentum transport
  
 LtracerSrc == T T                        ! temperature, salinity, inert
 
-
-bio_cobalt.in:
+# bio_cobalt.in:
   LtracerSrc == F F F F F F T T T F T T T T F F F F F F T T T T T F F F F F F T T
   LtracerSrc == 33*F
+
+# As of 3/25 running from 4779 to 4809
+# in setup_inner_nest.py, is outer initial file the restart file 1 timestep prior to start?
+
+
+-rw-r--r-- 1 lindsayv lindsayv 17150367 Mar 15 11:31 frc-cobalt.nc
+-rw-r--r-- 1 lindsayv lindsayv 27407591 Mar 15 11:30 frc-wrfo.nc
+drwxr-xr-x 2 lindsayv lindsayv     4096 Mar 15 11:28 fed_99/
+-rw-r--r-- 1 lindsayv lindsayv    37128 Mar 15 11:22 river-hioekg.nc
+-rw-r--r-- 1 lindsayv lindsayv 67360832 Mar 15 10:36 ini-his-03655.nc
+-rw-r--r-- 1 lindsayv lindsayv    12900 Mar 15 10:35 ini-03664.nc.pid21074.ncap2.tmp
+-rw-r--r-- 1 lindsayv lindsayv 16279359 Mar 15 09:52 hioekg-bry-phy.nc
+-rw-r--r-- 1 lindsayv lindsayv  9049435 Mar 15 09:52 hioekg-tide.nc
+-rw-r--r-- 1 lindsayv lindsayv 16279374 Mar 15 09:39 hioekg-bry-bio.nc
+-rw-r--r-- 1 lindsayv lindsayv  4499148 Jan 28 10:43 hioekg-grid.nc
 
