@@ -24,7 +24,7 @@ LtracerSrc == T T                        ! temperature, salinity, inert
   LtracerSrc == F F F F F F T T T F T T T T F F F F F F T T T T T F F F F F F T T
   LtracerSrc == 33*F
 
-# As of 3/25 running from 4779 to 4809
+# 4/1: Running nearly full 2013 cycle (4749 to 5109, or 12/31/2012 - 12/28/2013)
 # in setup_inner_nest.py: outer initial file is the restart file 1 timestep prior to start (i.e., for 2013: 4743 = rst, 4749 = ini)
 
 
@@ -39,5 +39,9 @@ drwxr-xr-x 2 lindsayv lindsayv     4096 Mar 15 11:28 fed_99/
 -rw-r--r-- 1 lindsayv lindsayv 16279374 Mar 15 09:39 hioekg-bry-bio.nc
 -rw-r--r-- 1 lindsayv lindsayv  4499148 Jan 28 10:43 hioekg-grid.nc
 
+# mkmov notes: installed in /Documents (adjacent to /scratch) via...
+git clone https://github.com/chrisb13/mkmov
+cd mkmov
+python mkmov.py 2d VARIABLE_NAME FILE_NAME
 
-python mkmov.py 2d adt --lmask -214748 --cmap Set3 -o /srv/ccrc/data42/z3457920/mkmovmovies4/AVISOdt_global_allsat_madt_Set3.mov /srv/ccrc/data42/z3457920/RawData/AVISO/RawData/dt_global_allsat_madt/ftp.aviso.altimetry.fr/global/delayed-time/grids/madt/all-sat-merged/h/*/*.nc &>  /srv/ccrc/data42/z3457920/mkmovmovies4/15.log &
+Tested with 'salt' and hioekg_his.nc. Moved to Desktop from tmp; plays fine!
