@@ -11,21 +11,21 @@ hioekg-tide.nc
 ini-03664.nc
 
 # change ocean by one day (= 86400 seconds)
-ncap2 -s 'ocean_time=ocean_time+86400' ini-04749.nc his-ini-04749.nc 
+ncap2 -s 'bry_time=bry_time-43200' hioekg-bry-bio.nc hioekg-bry-bio.nc 
 
 ----- Turn off the rivers:
-# ocean.in
+# ocean.in (switch all to F):
 
     LuvSrc == T                          ! horizontal momentum transport
  
 LtracerSrc == T T                        ! temperature, salinity, inert
 
-# bio_cobalt.in:
+# bio_cobalt.in (! first line and replace with second):
   LtracerSrc == F F F F F F T T T F T T T T F F F F F F T T T T T F F F F F F T T
   LtracerSrc == 33*F
 
 # As of 3/25 running from 4779 to 4809
-# in setup_inner_nest.py, is outer initial file the restart file 1 timestep prior to start?
+# in setup_inner_nest.py, is outer initial file the restart file 1 timestep prior to start? (3/26- looks like yes)
 
 
 -rw-r--r-- 1 lindsayv lindsayv 17150367 Mar 15 11:31 frc-cobalt.nc
@@ -39,3 +39,5 @@ drwxr-xr-x 2 lindsayv lindsayv     4096 Mar 15 11:28 fed_99/
 -rw-r--r-- 1 lindsayv lindsayv 16279374 Mar 15 09:39 hioekg-bry-bio.nc
 -rw-r--r-- 1 lindsayv lindsayv  4499148 Jan 28 10:43 hioekg-grid.nc
 
+
+python mkmov.py 2d adt --lmask -214748 --cmap Set3 -o /srv/ccrc/data42/z3457920/mkmovmovies4/AVISOdt_global_allsat_madt_Set3.mov /srv/ccrc/data42/z3457920/RawData/AVISO/RawData/dt_global_allsat_madt/ftp.aviso.altimetry.fr/global/delayed-time/grids/madt/all-sat-merged/h/*/*.nc &>  /srv/ccrc/data42/z3457920/mkmovmovies4/15.log &
