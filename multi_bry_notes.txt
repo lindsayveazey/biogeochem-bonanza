@@ -25,7 +25,7 @@ LtracerSrc == T T                        ! temperature, salinity, inert
   LtracerSrc == 33*F
 
 # As of 3/25 running from 4779 to 4809
-# in setup_inner_nest.py, is outer initial file the restart file 1 timestep prior to start? (3/26- looks like yes)
+# in setup_inner_nest.py: outer initial file is the restart file 1 timestep prior to start (i.e., for 2013: 4743 = rst, 4749 = ini)
 
 
 -rw-r--r-- 1 lindsayv lindsayv 17150367 Mar 15 11:31 frc-cobalt.nc

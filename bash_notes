@@ -15,14 +15,13 @@ scp C:/Users/linds/Downloads/hioekg_riverinfo.npz lindsayv@frinkiac.soest.hawaii
 scp C:/Users/linds/Downloads/river.py lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv
 ssh -Y lindsayv@frinkiac.soest.hawaii.edu
 
-# Vice versa
-ssh -Y lindsayv@frinkiac.soest.hawaii.edu
-scp lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv/etc/Setting_up_a_COBALT_run.docx /home/lindsay/Downloads/
+# Vice versa (updated for Gazelle 4/1/2019)
+scp lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv/hioekg_his.nc .
 
 # Set env
 export PATH=/share/apps/nco-4.7.6/bin:$PATH
-printf -v PATHIN "/share/frinkraid2/lindsayv/"
-printf -v PATHOUT "/share/frinkraid2/lindsayv/"
+printf -v PATHIN "/share/frinkraid3/lindsayv/"
+printf -v PATHOUT "/share/frinkraid3/lindsayv/"
 
 # Rename a file
 mv river.py bp_river.py
