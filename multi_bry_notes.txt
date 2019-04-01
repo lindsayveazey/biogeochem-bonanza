@@ -10,8 +10,8 @@ hioekg-grid.nc
 hioekg-tide.nc
 ini-03664.nc
 
-# change ocean by one day (= 86400 seconds)
-ncap2 -s 'bry_time=bry_time-43200' hioekg-bry-bio.nc hioekg-bry-bio.nc 
+# change time by one day (= 86400 seconds) or half a day ( = 43200 seconds)
+ncap2 -s 'ocean_time=ocean_time+43200' his-ini-04749.nc his-ini-04749.nc
 
 ----- Turn off the rivers:
 # ocean.in (switch all to F):
@@ -24,7 +24,8 @@ LtracerSrc == T T                        ! temperature, salinity, inert
   LtracerSrc == F F F F F F T T T F T T T T F F F F F F T T T T T F F F F F F T T
   LtracerSrc == 33*F
 
-# 4/1: Running nearly full 2013 cycle (4749 to 5109, or 12/31/2012 - 12/28/2013)
+# 4/1: Running nearly full 2013 cycle (4750 to 5108, or 1/2/2013 - 12/26/2013)
+# Once I moved his-ini-04749.nc to /output, I added 86400 seconds to the file and changed the name to his-ini-04750.nc. In spinup.sh, start say = 4750. Trying to initialize with 4749 (even at 12:00, the starting time for the bio forcing file) was not successful.
 # in setup_inner_nest.py: outer initial file is the restart file 1 timestep prior to start (i.e., for 2013: 4743 = rst, 4749 = ini)
 
 
