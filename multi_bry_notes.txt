@@ -11,7 +11,7 @@ hioekg-tide.nc
 ini-03664.nc
 
 # change time by one day (= 86400 seconds) or half a day ( = 43200 seconds)
-ncap2 -s 'ocean_time=ocean_time+43200' his-ini-04749.nc his-ini-04749.nc
+ncap2 -s 'ocean_time=ocean_time+86400' his-ini-04749.nc his-ini-04750.nc
 
 ----- Turn off the rivers:
 # ocean.in (switch all to F):
@@ -25,8 +25,10 @@ LtracerSrc == T T                        ! temperature, salinity, inert
   LtracerSrc == 33*F
 
 # 4/1: Running nearly full 2013 cycle (4750 to 5108, or 1/2/2013 - 12/26/2013)
-# Once I moved his-ini-04749.nc to /output, I added 86400 seconds to the file and changed the name to his-ini-04750.nc. In spinup.sh, start say = 4750. Trying to initialize with 4749 (even at 12:00, the starting time for the bio forcing file) was not successful.
+# Once I moved his-ini-04749.nc to /output, I added 86400 seconds to the file and changed the name to his-ini-04750.nc. In spinup.sh, start = 4750. Trying to initialize with 4749 (even at 12:00, the starting time for the bio forcing file) was not successful.
 # in setup_inner_nest.py: outer initial file is the restart file 1 timestep prior to start (i.e., for 2013: 4743 = rst, 4749 = ini)
+
+# 4/2: cycle failed after 1 month. Still having trouble creating last 3 days of 2013. As per yesterday, adding 86400 seconds to his-ini-04749 and changing name to his-ini-04750.
 
 
 -rw-r--r-- 1 lindsayv lindsayv 17150367 Mar 15 11:31 frc-cobalt.nc
