@@ -9,7 +9,7 @@ hioekg-bry-bio.nc
 hioekg-grid.nc
 
 # Change time by one day (= 86400 seconds) or half a day ( = 43200 seconds)
-ncap2 -s 'ocean_time=ocean_time+86400' his-ini-04749.nc his-ini-04750.nc
+ncap2 -s 'ocean_time=ocean_time+86400' ini-04749.nc his-ini-04750.nc
 
 # To turn off the rivers:
 ocean.in (switch all to F):
@@ -43,3 +43,12 @@ ncrcat -h hioekg-tide-12.nc hioekg-tide-3.nc hioekg-tide-123.nc
 ncrcat -h hioekg-tide-123.nc hioekg-tide-4.nc hioekg-tide-1234.nc
 ncrcat -h hioekg-tide-1234.nc hioekg-tide-5.nc hioekg-tide-12345.nc
 ncrcat -h hioekg-tide-12345.nc hioekg-tide-6.nc hioekg-tide.nc
+
+tide start: 4928
+bry-bio: Jan 1 to Dec 26 (12:00)
+bry-phy: Jan 1 to Dec 27 (00:00)
+
+days for spinup: Jan 2 - Dec 25 (4750 - 5107) = 358 days.
+358 * 86400 = 30931200 / DT (10) = 3093120 = NTIMES
+
+
