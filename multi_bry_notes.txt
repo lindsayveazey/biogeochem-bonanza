@@ -32,8 +32,14 @@ Tested with 'salt' and hioekg_his.nc. Moved to Desktop from tmp; plays fine!
 # 4/8: setup_inner_frc.py problem solved. Onto setup_inner_nest.py:
 
 # 4749 - 4809: -1 (rst: 4743)
-# 4810 - 4870: -2 (rst: 4809)
+# 4810 - 4870: -2 (rst: 4809) bry-bio-23 encompasses both 2 and 3
 # 4871 - 4931: -3 (rst: 4869)
 # 4932 - 4992: -4 (rst: 4929)
 # 4993 - 5053: -5 (rst: 4989)
-# 5054 - 5113: -6 (rst: 5049)
+# 5054 - 5107: -6 (rst: 5049)
+
+ncrcat -h hioekg-tide-1.nc hioekg-tide-2.nc hioekg-tide-12.nc 
+ncrcat -h hioekg-tide-12.nc hioekg-tide-3.nc hioekg-tide-123.nc
+ncrcat -h hioekg-tide-123.nc hioekg-tide-4.nc hioekg-tide-1234.nc
+ncrcat -h hioekg-tide-1234.nc hioekg-tide-5.nc hioekg-tide-12345.nc
+ncrcat -h hioekg-tide-12345.nc hioekg-tide-6.nc hioekg-tide.nc
