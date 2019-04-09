@@ -1,22 +1,20 @@
--bash-4.1$ date2day.sh 2010 1 3 
-[3655.0]
--bash-4.1$ date2day.sh 2010 1 11 
-[3663.0]
-
-
-hioekg-bry-bio.nc
+# Files:
+frc-cobalt.nc
+frc-wrfo.nc
+river-hioekg.nc
+ini-his-####.nc
 hioekg-bry-phy.nc
-hioekg-grid.nc
 hioekg-tide.nc
-ini-03664.nc
+hioekg-bry-bio.nc
+hioekg-grid.nc
 
-# change time by one day (= 86400 seconds) or half a day ( = 43200 seconds)
+# Change time by one day (= 86400 seconds) or half a day ( = 43200 seconds)
 ncap2 -s 'ocean_time=ocean_time+86400' his-ini-04749.nc his-ini-04750.nc
 
------ Turn off the rivers:
-# ocean.in (switch all to F):
+# To turn off the rivers:
+ocean.in (switch all to F):
 
-    LuvSrc == T                          ! horizontal momentum transport
+LuvSrc == T                          ! horizontal momentum transport
  
 LtracerSrc == T T                        ! temperature, salinity, inert
 
@@ -24,27 +22,18 @@ LtracerSrc == T T                        ! temperature, salinity, inert
   LtracerSrc == F F F F F F T T T F T T T T F F F F F F T T T T T F F F F F F T T
   LtracerSrc == 33*F
 
-# 4/1: Running nearly full 2013 cycle (4750 to 5108, or 1/2/2013 - 12/26/2013)
-# Once I moved his-ini-04749.nc to /output, I added 86400 seconds to the file and changed the name to his-ini-04750.nc. In spinup.sh, start = 4750. Trying to initialize with 4749 (even at 12:00, the starting time for the bio forcing file) was not successful.
-# in setup_inner_nest.py: outer initial file is the restart file 1 timestep prior to start (i.e., for 2013: 4743 = rst, 4749 = ini)
-
-# 4/2: cycle failed after 1 month. Still having trouble creating last 3 days of 2013. As per yesterday, adding 86400 seconds to his-ini-04749 and changing name to his-ini-04750.
-
-
--rw-r--r-- 1 lindsayv lindsayv 17150367 Mar 15 11:31 frc-cobalt.nc
--rw-r--r-- 1 lindsayv lindsayv 27407591 Mar 15 11:30 frc-wrfo.nc
-drwxr-xr-x 2 lindsayv lindsayv     4096 Mar 15 11:28 fed_99/
--rw-r--r-- 1 lindsayv lindsayv    37128 Mar 15 11:22 river-hioekg.nc
--rw-r--r-- 1 lindsayv lindsayv 67360832 Mar 15 10:36 ini-his-03655.nc
--rw-r--r-- 1 lindsayv lindsayv    12900 Mar 15 10:35 ini-03664.nc.pid21074.ncap2.tmp
--rw-r--r-- 1 lindsayv lindsayv 16279359 Mar 15 09:52 hioekg-bry-phy.nc
--rw-r--r-- 1 lindsayv lindsayv  9049435 Mar 15 09:52 hioekg-tide.nc
--rw-r--r-- 1 lindsayv lindsayv 16279374 Mar 15 09:39 hioekg-bry-bio.nc
--rw-r--r-- 1 lindsayv lindsayv  4499148 Jan 28 10:43 hioekg-grid.nc
-
 # mkmov notes: installed in /Documents (adjacent to /scratch) via...
 git clone https://github.com/chrisb13/mkmov
 cd mkmov
 python mkmov.py 2d VARIABLE_NAME FILE_NAME
 
 Tested with 'salt' and hioekg_his.nc. Moved to Desktop from tmp; plays fine!
+
+# 4/8: setup_inner_frc.py problem solved. Onto setup_inner_nest.py:
+
+# 4749 - 4809: -1 (rst: 4743)
+# 4810 - 4870: -2 (rst: 4809)
+# 4871 - 4931: -3 (rst: 4869)
+# 4932 - 4992: -4 (rst: 4929)
+# 4993 - 5053: -5 (rst: 4989)
+# 5054 - 5113: -6 (rst: 5049)
