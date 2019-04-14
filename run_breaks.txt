@@ -1,0 +1,36 @@
+JAN
+ncks -d bry_time,0,240 hioekg-bry-phy.nc hioekg-bry-phy-01.nc
+
+FEB
+ncks -d bry_time,241,481 hioekg-bry-phy.nc hioekg-bry-phy-02.nc
+4779 (accepted 4780 but re-wrote ini-4809)
+4840 (did not accept 4807- too short?)
+rst: 4749
+bry-phy-2 ends 4809 00:00
+spinup 4779 - 4808 (30)
+ocean.in: 259200, "bry-phy-02"
+
+MAR
+ncks -d bry_time,482,722 hioekg-bry-phy.nc hioekg-bry-phy-03.nc
+4808
+4838
+rst: 4779
+bry-phy-3 starts Mar 2, ends Apr 1 00:00
+ini-04809 starts 00:00 Mar 2
+spinup 4809 - 4838 (30)
+
+APR 
+4839
+4868
+rst: 4839 * May need to go back and do this for all of the...match rst to start
+
+
+MAY
+4869
+4898
+rst: 4839
+
+JUN
+
+
+
