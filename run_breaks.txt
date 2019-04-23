@@ -1,45 +1,111 @@
-# General rule- subtract 2 from the duplicate. Add 2 to start.
+# Prior procedure (~2 commits ago) corrupted my resulting bry-phy files. This is the first protocol that works.
 
-ncks -d bry_time,0,240 hioekg-bry-phy-1.nc hioekg-bry-phy-Jan.nc
+# Only the bry-phy portion of setup_inner_nest.py produces problematic files (i.e., a duplicate of 00:00 at the start of each month). Here, I outline my steps to counter this bug.
 
-ncks -d bry_time,242,481 hioekg-bry-phy-1.nc hioekg-bry-phy-Feb.nc
+'''
+First, I set setup_inner_nest.py to run from 
+rst = 4743, 
+start day = 4749, 
+end day = 4778.
 
-ncks -d bry_time,483,722 hioekg-bry-phy-1.nc hioekg-bry-phy-Mar.nc
+I did not edit this file.
 
-ncks -d bry_time,724,963 hioekg-bry-phy-1.nc hioekg-bry-phy-Apr.nc
+Next, I set setup_inner_nest.py to run from 
+rst, start = 4779, 
+end day = 4808.
 
-ncks -d bry_time,965,1204 hioekg-bry-phy-1.nc hioekg-bry-phy-May.nc
+The values are zero indexed, so I eliminated the first value, the duplicate of 00:00 on Jan 31, and kept everything else. 
+'''
+ncks -d bry_time,1,241 hioekg-bry-phy-4779-4808.nc hioekg-bry-phy-4779-4808-1.nc
 
-ncks -d bry_time,1206,1445 hioekg-bry-phy-1.nc hioekg-bry-phy-Jun.nc
+# I then concatenated the two big files:
+ncrcat -h hioekg-bry-phy-4749-4778.nc hioekg-bry-phy-4779-4808-1.nc hioekg-bry-phy-cat.nc 
 
-ncks -d bry_time,1447,1686 hioekg-bry-phy-1.nc hioekg-bry-phy-Jul.nc
+# spinup.sh and ocean.in have told cycle_roms to run for 30 days. 
 
-# Concatenate the two big files
-ncrcat -h hioekg-bry-phy-1.nc hioekg-bry-phy.nc hioekg-bry-phy-cat.nc 
+''' From here, I will pause cycle_roms, as I know this protocol works. I will produce files for the remaining months in a similar fashion.
 
-ncks -d bry_time,1688,1927 hioekg-bry-phy-1.nc hioekg-bry-phy-Aug.nc
+!!! REMEMBER !!! to change the name of your OUTPUT FILE EACH TIME!!
 
-ncks -d bry_time,2170,2409 hioekg-bry-phy-cat.nc hioekg-bry-phy-Sep.nc
+rst, start = 4809, 
+end day = 4838
 
-ncks -d bry_time,2411,2650 hioekg-bry-phy-cat.nc hioekg-bry-phy-Oct.nc
+rst, start = 4839, 
+end day = 4868
 
-ncks -d bry_time,2652,2891 hioekg-bry-phy-cat.nc hioekg-bry-phy-Nov.nc
+rst, start = 4869, 
+end day = 4898
 
-ncks -d bry_time,2893,3133 hioekg-bry-phy-cat.nc hioekg-bry-phy-Dec.nc
+rst, start = 4899, 
+end day = 4928
 
-# bio (1) ends Aug 28 at 12
-# bio (2) starts Jul 30 at 12, ends Dec 26 at 12
+rst, start = 4929, 
+end day = 4958
 
-# Edit bio (1) to end Jul 29
-ncks -d bry_time,0,209 hioekg-bry-bio-1.nc hioekg-bry-bio-01.nc
+rst, start = 4959, 
+end day = 4988
 
-# Concatenate bio files
-ncrcat -h hioekg-bry-bio-01.nc hioekg-bry-bio.nc hioekg-bry-bio-cat.nc 
+rst, start = 4989, 
+end day = 5018
 
-# Removed extraneous files and renamed both concatenated files. Reran chunks 3 and 4 for the tide and ini files in nest.py.
+rst, start = 5019, 
+end day = 5048
 
-# edited spinup for 30 day run from 4750 to 5107
+rst, start = 5049, 
+end day = 5078
 
-# checked ocean.in to input tide start
+rst, start = 5079, 
+end day = 5108
 
+And here is where I will eliminate duplicate days for each file and check as I go...'''
 
+ncks -d bry_time,1,240 hioekg-bry-phy-4809-4838.nc hioekg-bry-phy-4809-4838-1.nc
+
+ncks -d bry_time,1,240 hioekg-bry-phy-4839-4868.nc hioekg-bry-phy-4839-4868-1.nc
+
+ncrcat -h hioekg-bry-phy-4809-4838-1.nc hioekg-bry-phy-4839-4868-1.nc hioekg-bry-phy-cat-4809-4868.nc 
+#
+
+ncks -d bry_time,1,240 hioekg-bry-phy-4869-4898.nc hioekg-bry-phy-4869-4898-1.nc
+
+ncks -d bry_time,1,240 hioekg-bry-phy-4899-4928.nc hioekg-bry-phy-4899-4928-1.nc
+
+ncrcat -h hioekg-bry-phy-4869-4898-1.nc hioekg-bry-phy-4899-4928-1.nc hioekg-bry-phy-cat-4869-4928.nc 
+#
+
+ncks -d bry_time,1,240 hioekg-bry-phy-4929-4958.nc hioekg-bry-phy-4929-4958-1.nc
+
+ncks -d bry_time,1,240 hioekg-bry-phy-4959-4988.nc hioekg-bry-phy-4959-4988-1.nc
+
+ncrcat -h hioekg-bry-phy-4929-4958-1.nc hioekg-bry-phy-4959-4988-1.nc hioekg-bry-phy-cat-4929-4988.nc 
+#
+
+ncks -d bry_time,1,240 hioekg-bry-phy-4989-5018.nc hioekg-bry-phy-4989-5018-1.nc
+
+ncks -d bry_time,1,240 hioekg-bry-phy-5019-5048.nc hioekg-bry-phy-5019-5048-1.nc
+
+ncrcat -h hioekg-bry-phy-4989-5018-1.nc hioekg-bry-phy-5019-5048-1.nc hioekg-bry-phy-cat-4989-5048.nc 
+#
+
+ncks -d bry_time,1,240 hioekg-bry-phy-5049-5078.nc hioekg-bry-phy-5049-5078-1.nc
+
+ncks -d bry_time,1,240 hioekg-bry-phy-5079-5108.nc hioekg-bry-phy-5079-5108-1.nc
+
+ncrcat -h hioekg-bry-phy-5049-5078-1.nc hioekg-bry-phy-5079-5108-1.nc hioekg-bry-phy-cat-5049-5108.nc 
+#
+
+# Now to join sets of 2...
+
+ncrcat -h hioekg-bry-phy-cat.nc hioekg-bry-phy-cat-4809-4868.nc hioekg-bry-phy-cat-4749-4868.nc 
+#
+
+ncrcat -h hioekg-bry-phy-cat-4869-4928.nc hioekg-bry-phy-cat-4929-4988.nc hioekg-bry-phy-cat-4869-4988.nc 
+#
+
+ncrcat -h hioekg-bry-phy-cat-4989-5048.nc hioekg-bry-phy-cat-5049-5108.nc hioekg-bry-phy-cat-4989-5108.nc 
+
+# And finally, merge all...
+
+ncrcat -h hioekg-bry-phy-cat-4749-4868.nc hioekg-bry-phy-cat-4869-4988.nc hioekg-bry-phy-cat-4749-4988.nc 
+
+ncrcat -h hioekg-bry-phy-cat-4749-4988.nc hioekg-bry-phy-cat-4989-5108.nc hioekg-bry-phy-cat-4749-5108.nc 
