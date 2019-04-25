@@ -29,26 +29,21 @@ python mkmov.py 2d VARIABLE_NAME FILE_NAME
 
 Tested with 'salt' and hioekg_his.nc. Moved to Desktop from tmp; plays fine!
 
-# 4/8: setup_inner_frc.py problem solved. Onto setup_inner_nest.py:
+# Fixing erroneous month (May) in 2013 bry-bio: 0s begin 1 May (frame 121) to 30 May (frame 150). Check lithdet_east for status.
 
-# 4749 - 4809: -1 (rst: 4743)
-# 4810 - 4870: -2 (rst: 4809) bry-bio-23 encompasses both 2 and 3
-# 4871 - 4931: -3 (rst: 4869)
-# 4932 - 4992: -4 (rst: 4929)
-# 4993 - 5053: -5 (rst: 4989)
-# 5054 - 5107: -6 (rst: 5049)
+ncks -d bry_time,0,119 bio-rename.nc hioekg-bry-bio-1.nc 
+ncks -d bry_time,151,359 bio-rename.nc hioekg-bry-bio-2.nc
+ncrcat -h hioekg-bry-bio-1.nc hioekg-bry-bio-4869-4899.nc hioekg-bry-bio-cat-4899.nc 
 
-ncrcat -h hioekg-tide-1.nc hioekg-tide-2.nc hioekg-tide-12.nc 
-ncrcat -h hioekg-tide-12.nc hioekg-tide-3.nc hioekg-tide-123.nc
-ncrcat -h hioekg-tide-123.nc hioekg-tide-4.nc hioekg-tide-1234.nc
-ncrcat -h hioekg-tide-1234.nc hioekg-tide-5.nc hioekg-tide-12345.nc
-ncrcat -h hioekg-tide-12345.nc hioekg-tide-6.nc hioekg-tide.nc
+# The above goes to 29 June- cut bry-bio-2 to start June 30:
 
-tide start: 4928
-bry-bio: Jan 1 to Dec 26 (12:00)
-bry-phy: Jan 1 to Dec 27 (00:00)
+ncks -d bry_time,29,208 hioekg-bry-bio-2.nc hioekg-bry-bio-2.nc
 
-days for spinup: Jan 2 - Dec 25 (4750 - 5107) = 358 days.
-358 * 86400 = 30931200 / DT (10) = 3093120 = NTIMES
+ncrcat -h hioekg-bry-bio-cat-4899.nc hioekg-bry-bio-2.nc hioekg-bry-bio.nc 
 
+# cd output
+# Removing files created after 04840
+cp hioekg_rst_04840.nc his-ini-04840.nc
+
+# In ocean.in, changed DSTART to 4840
 
