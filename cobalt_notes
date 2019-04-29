@@ -35,4 +35,22 @@ LBC(isTvar) ==
 32 dic Dissolved Inorganic Carbon: river_dic (mol/kg)
 33 alk Alkalinity: river_alk (mol/kg)
 
+4/29: 
+
+Hout(idTvar) == T T F T F F T T T T T T T T F F F F F F T T T T T F F F F F T T T
+LtracerSrc == T T F T F F T T T T T T T T F F F F F F T T T T T F F F F F T T T
+
+both changed to:
+
+F F F T F F F F F F F F F F F F F F F F F F F F F F F F F F F F T
+
+Only writing nsmz (fine) and alk (problematic). 
+
+In ocean.in, output changed to 360 (hourly). DSTART = 4886. NTIMES = 7 * 8640 = 60480
+
+Modified ini-04869.nc:
+ncap2 -s 'ocean_time=ocean_time+1468800' ini-04869.nc his-ini-04886.nc
+
+sswrad may be the issue. In ocean.in, changed wrfo path to /share/frinkraid3/tobiasf/temp/frc-wrfo_TEST.nc. Here, TF set min >0. The error starts at 16:00, this may change it.
+
 
