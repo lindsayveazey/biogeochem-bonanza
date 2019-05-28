@@ -8,8 +8,12 @@ hioekg-tide.nc
 hioekg-bry-bio.nc
 hioekg-grid.nc
 
+###############################
+
 # Change time by one day (= 86400 seconds) or half a day ( = 43200 seconds)
 ncap2 -s 'ocean_time=ocean_time+86400' ini-04749.nc his-ini-04750.nc
+
+###############################
 
 # To turn off the rivers:
 ocean.in (switch all to F):
@@ -22,6 +26,8 @@ LtracerSrc == T T                        ! temperature, salinity, inert
   LtracerSrc == F F F F F F T T T F T T T T F F F F F F T T T T T F F F F F F T T
   LtracerSrc == 33*F
 
+###############################
+
 # mkmov notes: installed in /Documents (adjacent to /scratch) via...
 git clone https://github.com/chrisb13/mkmov
 cd mkmov
@@ -29,21 +35,40 @@ python mkmov.py 2d VARIABLE_NAME FILE_NAME
 
 Tested with 'salt' and hioekg_his.nc. Moved to Desktop from tmp; plays fine!
 
-# Fixing erroneous month (May) in 2013 bry-bio: 0s begin 1 May (frame 121) to 30 May (frame 150). Check lithdet_east for status.
+################################
+# Remove duplicate frames, combine all months:
 
-ncks -d bry_time,0,119 bio-rename.nc hioekg-bry-bio-1.nc 
-ncks -d bry_time,151,359 bio-rename.nc hioekg-bry-bio-2.nc
-ncrcat -h hioekg-bry-bio-1.nc hioekg-bry-bio-4869-4899.nc hioekg-bry-bio-cat-4899.nc 
+ncks -O -d ocean_time,1,30 hioekg_his_04780.nc hioekg_his_04780.nc
+ncks -O -d ocean_time,1,30 hioekg_his_04810.nc hioekg_his_04810.nc
+ncks -O -d ocean_time,1,30 hioekg_his_04840.nc hioekg_his_04840.nc
+ncks -O -d ocean_time,1,30 hioekg_his_04870.nc hioekg_his_04870.nc
+ncks -O -d ocean_time,1,30 hioekg_his_04900.nc hioekg_his_04900.nc
+ncks -O -d ocean_time,1,30 hioekg_his_04930.nc hioekg_his_04930.nc
+ncks -O -d ocean_time,1,30 hioekg_his_04960.nc hioekg_his_04960.nc
+ncks -O -d ocean_time,1,30 hioekg_his_04990.nc hioekg_his_04990.nc
+ncks -O -d ocean_time,1,30 hioekg_his_05020.nc hioekg_his_05020.nc
+ncks -O -d ocean_time,1,30 hioekg_his_05050.nc hioekg_his_05050.nc
+ncks -O -d ocean_time,1,30 hioekg_his_05080.nc hioekg_his_05080.nc
+ncks -O -d ocean_time,1,3 hioekg_his_05110.nc hioekg_his_05110.nc
 
-# The above goes to 29 June- cut bry-bio-2 to start June 30:
 
-ncks -d bry_time,29,208 hioekg-bry-bio-2.nc hioekg-bry-bio-2.nc
+ncrcat -h hioekg_his_04750.nc hioekg_his_04780.nc hioekg_his_04750_04780.nc 
+ncrcat -h hioekg_his_04750_04780.nc hioekg_his_04810.nc hioekg_his_04750_04810.nc 
+ncrcat -h hioekg_his_04750_04810.nc hioekg_his_04840.nc hioekg_his_04750_04840.nc 
+ncrcat -h hioekg_his_04750_04840.nc hioekg_his_04870.nc hioekg_his_04750_04870.nc 
+ncrcat -h hioekg_his_04750_04870.nc hioekg_his_04900.nc hioekg_his_04750_04900.nc 
+ncrcat -h hioekg_his_04750_04900.nc hioekg_his_04930.nc hioekg_his_04750_04930.nc 
+ncrcat -h hioekg_his_04750_04930.nc hioekg_his_04960.nc hioekg_his_04750_04960.nc 
+ncrcat -h hioekg_his_04750_04960.nc hioekg_his_04990.nc hioekg_his_04750_04990.nc 
+ncrcat -h hioekg_his_04750_04990.nc hioekg_his_05020.nc hioekg_his_04750_05020.nc 
+ncrcat -h hioekg_his_04750_05020.nc hioekg_his_05050.nc hioekg_his_04750_05050.nc 
+ncrcat -h hioekg_his_04750_05050.nc hioekg_his_05080.nc hioekg_his_04750_05080.nc 
+ncrcat -h hioekg_his_04750_05080.nc hioekg_his_05110.nc hioekg_his_04750_05110.nc 
 
-ncrcat -h hioekg-bry-bio-cat-4899.nc hioekg-bry-bio-2.nc hioekg-bry-bio.nc 
-
-# cd output
-# Removing files created after 04840
-cp hioekg_rst_04840.nc his-ini-04840.nc
-
-# In ocean.in, changed DSTART to 4840
+###############################
+# Send files to local repo /tmp and make clips (outside ssh session):
+scp lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv/hioekg-template/output/hioekg_his_04750_05110.nc .
+cp hioekg_his_04750_05110.nc /home/lindsay/Documents/mkmov
+cd /home/lindsay/Documents/mkmov
+python mkmov.py 2d nbact hioekg_his_04750_05110.nc
 
