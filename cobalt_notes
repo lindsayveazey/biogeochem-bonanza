@@ -1,4 +1,31 @@
+# In /ncfiles on server:
+frc-cobalt.nc
+frc-wrfo.nc
+river-hioekg.nc
+ini-his-####.nc
+hioekg-bry-phy.nc
+hioekg-tide.nc
+hioekg-bry-bio.nc
+hioekg-grid.nc
+
+### 
+
+# To turn off the rivers:
+ocean.in (switch all to F):
+
+LuvSrc == T                          ! horizontal momentum transport
+ 
+LtracerSrc == T T                        ! temperature, salinity, inert
+
+In bio_cobalt.in (! first line and replace with second):
+  LtracerSrc == F F F F F F T T T F T T T T F F F F F F T T T T T F F F F F F T T
+  LtracerSrc == 33*F
+
+### 
+
 In bio_cobalt.in, Hout(idTvar) and LtracerSrc both ==.
+
+###
 
 LBC(isTvar) ==   
 1 nsm Small Phytoplankton Nitrogen: river_nsm (mol/kg)
@@ -17,7 +44,7 @@ LBC(isTvar) ==
 14 sio4 Silicate: river_sio4 (mol/kg)
 15 silg Large Phytoplankton Silicon: river_silg (mol/kg)
 16 sidet Detrital Silicon: river_sidet (mol/kg)
-17 cadet_calc Detrital CaCO3river_cadet_calc (mol/kg)
+17 cadet_calc Detrital CaCO3: river_cadet_calc (mol/kg)
 18 cadet_arag Detrital CaCO3: river_cadet_arag (mol/kg)
 19 lith Lithogenic Aluminosilicate: river_lith (mol/kg)
 20 lithdet lithdet: river_lithdet (mol/kg)
@@ -35,3 +62,35 @@ LBC(isTvar) ==
 32 dic Dissolved Inorganic Carbon: river_dic (mol/kg)
 33 alk Alkalinity: river_alk (mol/kg)
 
+###
+
+# Remove duplicate frames, combine all months:
+
+ncks -O -d ocean_time,1,30 hioekg_his_04780.nc hioekg_his_04780.nc
+ncks -O -d ocean_time,1,30 hioekg_his_04810.nc hioekg_his_04810.nc
+ncks -O -d ocean_time,1,30 hioekg_his_04840.nc hioekg_his_04840.nc
+ncks -O -d ocean_time,1,30 hioekg_his_04870.nc hioekg_his_04870.nc
+ncks -O -d ocean_time,1,30 hioekg_his_04900.nc hioekg_his_04900.nc
+ncks -O -d ocean_time,1,30 hioekg_his_04930.nc hioekg_his_04930.nc
+ncks -O -d ocean_time,1,30 hioekg_his_04960.nc hioekg_his_04960.nc
+ncks -O -d ocean_time,1,30 hioekg_his_04990.nc hioekg_his_04990.nc
+ncks -O -d ocean_time,1,30 hioekg_his_05020.nc hioekg_his_05020.nc
+ncks -O -d ocean_time,1,30 hioekg_his_05050.nc hioekg_his_05050.nc
+ncks -O -d ocean_time,1,30 hioekg_his_05080.nc hioekg_his_05080.nc
+ncks -O -d ocean_time,1,3 hioekg_his_05110.nc hioekg_his_05110.nc
+
+
+ncrcat -h hioekg_his_04750.nc hioekg_his_04780.nc hioekg_his_04750_04780.nc 
+ncrcat -h hioekg_his_04750_04780.nc hioekg_his_04810.nc hioekg_his_04750_04810.nc 
+ncrcat -h hioekg_his_04750_04810.nc hioekg_his_04840.nc hioekg_his_04750_04840.nc 
+ncrcat -h hioekg_his_04750_04840.nc hioekg_his_04870.nc hioekg_his_04750_04870.nc 
+ncrcat -h hioekg_his_04750_04870.nc hioekg_his_04900.nc hioekg_his_04750_04900.nc 
+ncrcat -h hioekg_his_04750_04900.nc hioekg_his_04930.nc hioekg_his_04750_04930.nc 
+ncrcat -h hioekg_his_04750_04930.nc hioekg_his_04960.nc hioekg_his_04750_04960.nc 
+ncrcat -h hioekg_his_04750_04960.nc hioekg_his_04990.nc hioekg_his_04750_04990.nc 
+ncrcat -h hioekg_his_04750_04990.nc hioekg_his_05020.nc hioekg_his_04750_05020.nc 
+ncrcat -h hioekg_his_04750_05020.nc hioekg_his_05050.nc hioekg_his_04750_05050.nc 
+ncrcat -h hioekg_his_04750_05050.nc hioekg_his_05080.nc hioekg_his_04750_05080.nc 
+ncrcat -h hioekg_his_04750_05080.nc hioekg_his_05110.nc hioekg_his_04750_05110.nc 
+
+###

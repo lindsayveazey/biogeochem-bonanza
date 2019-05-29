@@ -73,32 +73,3 @@ ncwa -y avgsqr -v v -a time out.nc out.nc # Finally overwrite out.nc with the va
 
 # Can also use ‘-y rmssdn’ (rather than ‘-y rms’) in the final step to ensure the standard deviation is correctly normalized by one fewer than the number of time samples. 
 
-#############################################################
-
-# First: started a cobalt_test repo on GH
-# In Git Kraken, initialized and committed the README
-
-# Recursively copy TF's COBALT files to my dir
-cp -r /share/frinkraid2/tobiasf/hiig-nlm-reanalysis-cobalt/ /share/frinkraid2/lindsayv/cobalt 
-# Recursively send files from frinkiac to local
-scp -r lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid2/lindsayv/cobalt/hiig-nlm-reanalysis-cobalt/nest /home/lindsay/Documents/PowellLab/cobalt_test
-
-cd /home/lindsay/Documents/PowellLab/cobalt_test
-
-git add . # Stage files for commit
-git commit -m "All commit- testing"
-git remote add origin https://github.com/lindsayveazey/cobalt_test
-git remote -v # Verify the remote URL
-git push -u origin master # Pushes to remote repo
-
-###########################################################
-
-# Occasionally update my frinkiac home dir:
-
-pwd
-#/share/frinkraid2/lindsayv
-git clone ~powellb/roms/src
-
-
-
-
