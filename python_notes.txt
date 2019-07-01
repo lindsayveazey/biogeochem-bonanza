@@ -1,12 +1,27 @@
+128.171.156.147
+
+
 # START PYTHON: 
 /usr/bin/env python
 # or
 python
 # better:
 ipython
-# START JUPYTER: 
-jupyter notebook
-http://localhost:8900/tree? # to access jupyter nb on frinkiac
+
+# Setting up remote access to Jupyter on the frinkraid
+
+# ssh in, then:
+cd ./jupyter
+nano jupyter_notebook_config
+c.NotebookApp.open_browser = False # changed to True
+c.NotebookApp.allow_origin = '' # changed to '0.0.0.0' to allow all origins
+c.NotebookApp.ip = '' # changed to '0.0.0.0' to listen on all IPs
+c.NotebookApp.password_required = False # Unhashed this, hashed the password specification line above
+c.NotebookApp.open_browser = True # Changed to False to prevent the automatic opening of an annoying frozen window
+
+dig +short myip.opendns.com @resolver1.opendns.com # get my own public IP
+
+jupyter notebook --ip 128.171.156.147 --port 8890 
 
 ###########################################
 # Installing conda on the Gazelle
