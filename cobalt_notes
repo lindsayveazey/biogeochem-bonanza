@@ -79,7 +79,6 @@ ncks -O -d ocean_time,1,30 hioekg_his_05050.nc hioekg_his_05050.nc
 ncks -O -d ocean_time,1,30 hioekg_his_05080.nc hioekg_his_05080.nc
 ncks -O -d ocean_time,1,3 hioekg_his_05110.nc hioekg_his_05110.nc
 
-
 ncrcat -h hioekg_his_04750.nc hioekg_his_04780.nc hioekg_his_04750_04780.nc 
 ncrcat -h hioekg_his_04750_04780.nc hioekg_his_04810.nc hioekg_his_04750_04810.nc 
 ncrcat -h hioekg_his_04750_04810.nc hioekg_his_04840.nc hioekg_his_04750_04840.nc 
@@ -94,3 +93,14 @@ ncrcat -h hioekg_his_04750_05050.nc hioekg_his_05080.nc hioekg_his_04750_05080.n
 ncrcat -h hioekg_his_04750_05080.nc hioekg_his_05110.nc hioekg_his_04750_05110.nc 
 
 ###
+
+# Change all no3 negatives:
+
+ncap2 -s 'where(no3_north < 0) no3_north=0' hioekg-bry-bio.nc hioekg-bry-bio-no3-edit.nc 
+ncap2 -s 'where(no3_east < 0) no3_east=0' hioekg-bry-bio-no3-edit.nc hioekg-bry-bio-no3-edit.nc 
+ncap2 -s 'where(no3_west < 0) no3_west=0' hioekg-bry-bio-no3-edit.nc hioekg-bry-bio-no3-edit.nc 
+ncap2 -s 'where(no3_south < 0) no3_south=0' hioekg-bry-bio-no3-edit.nc hioekg-bry-bio-no3-edit.nc 
+
+
+
+

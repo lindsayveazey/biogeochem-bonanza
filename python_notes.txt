@@ -21,7 +21,12 @@ c.NotebookApp.open_browser = True # Changed to False to prevent the automatic op
 
 dig +short myip.opendns.com @resolver1.opendns.com # get my own public IP
 
+# find current ip (this won't impact how I call jupyter on server, FYI):
+ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}' 
+
+# call jupyter on frinkiac
 jupyter notebook --ip 128.171.156.147 --port 8890 
+
 
 ###########################################
 # Installing conda on the Gazelle
