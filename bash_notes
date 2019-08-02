@@ -11,15 +11,15 @@ printf -v PATHOUT "/home/lindsay/Downloads/"
 ## Server protocol
 
 # Copy files from local to server prior to ssh
-cd home/linds/Documents/biogeochem_bonanza/
-scp  lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv/Manuscript
+cd home/lindsay/Documents/biogeochem_bonanza/
+scp COBALT_analyses_bash_Python.ipynb lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv/Manuscript
 
 scp /home/lindsay/NB_test.nc lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv
 scp C:/Users/linds/Downloads/river.py lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv
 ssh -Y lindsayv@frinkiac.soest.hawaii.edu
 
 # Vice versa (updated for Gazelle 4/1/2019)
-scp lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv/Manuscript/COBALT* .
+scp lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv/Manuscript/COBALT_analyses.ipynb .
 
 # Set env
 export PATH=/share/apps/nco-4.7.6/bin:$PATH
