@@ -14,12 +14,12 @@ printf -v PATHOUT "/home/lindsay/Downloads/"
 cd home/linds/Documents/biogeochem_bonanza/
 scp  lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv/Manuscript
 
-scp C:/Users/linds/Downloads/hioekg_riverinfo.npz lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv
+scp /home/lindsay/NB_test.nc lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv
 scp C:/Users/linds/Downloads/river.py lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv
 ssh -Y lindsayv@frinkiac.soest.hawaii.edu
 
 # Vice versa (updated for Gazelle 4/1/2019)
-scp lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv/etc/lnb/ .
+scp lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv/Manuscript/COBALT* .
 
 # Set env
 export PATH=/share/apps/nco-4.7.6/bin:$PATH
