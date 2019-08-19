@@ -79,18 +79,7 @@ ncks -O -d ocean_time,1,30 hioekg_his_05050.nc hioekg_his_05050.nc
 ncks -O -d ocean_time,1,30 hioekg_his_05080.nc hioekg_his_05080.nc
 ncks -O -d ocean_time,1,3 hioekg_his_05110.nc hioekg_his_05110.nc
 
-ncrcat -h hioekg_his_04750.nc hioekg_his_04780.nc hioekg_his_04750_04780.nc 
-ncrcat -h hioekg_his_04750_04780.nc hioekg_his_04810.nc hioekg_his_04750_04810.nc 
-ncrcat -h hioekg_his_04750_04810.nc hioekg_his_04840.nc hioekg_his_04750_04840.nc 
-ncrcat -h hioekg_his_04750_04840.nc hioekg_his_04870.nc hioekg_his_04750_04870.nc 
-ncrcat -h hioekg_his_04750_04870.nc hioekg_his_04900.nc hioekg_his_04750_04900.nc 
-ncrcat -h hioekg_his_04750_04900.nc hioekg_his_04930.nc hioekg_his_04750_04930.nc 
-ncrcat -h hioekg_his_04750_04930.nc hioekg_his_04960.nc hioekg_his_04750_04960.nc 
-ncrcat -h hioekg_his_04750_04960.nc hioekg_his_04990.nc hioekg_his_04750_04990.nc 
-ncrcat -h hioekg_his_04750_04990.nc hioekg_his_05020.nc hioekg_his_04750_05020.nc 
-ncrcat -h hioekg_his_04750_05020.nc hioekg_his_05050.nc hioekg_his_04750_05050.nc 
-ncrcat -h hioekg_his_04750_05050.nc hioekg_his_05080.nc hioekg_his_04750_05080.nc 
-ncrcat -h hioekg_his_04750_05080.nc hioekg_his_05110.nc hioekg_his_04750_05110.nc 
+ncrcat -h hioekg_his_04750.nc hioekg_his_*.nc hioekg_his_04750_05110.nc 
 
 ###
 
