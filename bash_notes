@@ -26,9 +26,6 @@ export PATH=/share/apps/nco-4.7.6/bin:$PATH
 printf -v PATHIN "/share/frinkraid3/lindsayv/"
 printf -v PATHOUT "/share/frinkraid3/lindsayv/"
 
-# Rename a file
-mv river.py bp_river.py
-
 # Change which server if one is busy
 
 # F2 has 4 nodes with 16 CPUs each. So, assuming you are running on 64 CPUs, you need to make changes in two places:

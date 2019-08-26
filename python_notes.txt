@@ -1,5 +1,8 @@
 128.171.156.147
 
+# Current dir
+import os
+os.getcwd()
 
 # START PYTHON: 
 /usr/bin/env python
