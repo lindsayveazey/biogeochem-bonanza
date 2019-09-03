@@ -11,10 +11,10 @@ printf -v PATHOUT "/home/lindsay/Downloads/"
 ## Server protocol
 
 # Copy files from local to server prior to ssh
-cd home/lindsay/Documents/biogeochem_bonanza/
-scp COBALT_analyses_bash_Python.ipynb lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv/Manuscript
+cd /home/lindsay/Documents/biogeochem_bonanza/
+scp COBALT_analyses.ipynb lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv/Manuscript
 
-scp /home/lindsay/NB_test.nc lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv
+scp /home/lindsay/Documents/biogeochem_bonanza/COBALT_bugs.ipynb lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv/Manuscript
 scp C:/Users/linds/Downloads/river.py lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv
 ssh -Y lindsayv@frinkiac.soest.hawaii.edu
 
