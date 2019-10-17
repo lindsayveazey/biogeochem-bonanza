@@ -1,0 +1,347 @@
+# All the variables in a string:
+# nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk
+
+### Bash looping script: monthly averages ###
+
+# store path with input in local variable PATH2
+printf -v PATH2 "/share/frinkraid3/lindsayv/hioekg-2014/output_semi_daily/"
+cd $PATH2
+# define local variable tn0; here, the integer that corresponds to the ROMS time stamp on the file (without zero padding)  -- this is Jan 2, 2014
+tn0=5115
+# for loop: loop over 13 files
+for ((i=0; i<13; i++ ));
+do
+## NOW INSIDE FOR LOOP
+
+# in this printf command, %s means to copy a string
+# and %05d means a 5 digit integer padded with 0s on the left
+printf -v FNin "%shioekg_avg_%05d.nc" $PATH2 $tn0
+printf -v FNout "%shioekg_monthly_mean_%05d.nc" $PATH2 $tn0
+# this command averages file FNin along the record dimension (time) and put the output in new file $FNout
+ncra $FNin $FNout
+# output to screen
+echo $tn0
+echo $FNin
+echo $FNout
+# increase tn0 by 30 days
+tn0=$((tn0+30))
+
+## done CLOSES FOR LOOP
+done
+cd $PATH2
+
+### Join December and end-of-year 5 day chunk ###
+
+ncra hioekg_monthly_mean_05445.nc hioekg_monthly_mean_05475.nc hioekg_monthly_mean_05445.nc
+
+## (outside of ssh terminal) send monthly_mean files to local
+
+scp lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv/hioekg-2014/output_semi_daily/hioekg_monthly* .
+
+
+### January 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05115.nc NB_all_var_05115.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05115.nc CB_all_var_05115.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05115.nc SB_all_var_05115.nc
+
+# Extract surface layer
+
+ncks -O -d s_rho,-0.975 NB_all_var_05115.nc NB_all_var_surface_05115.nc
+ncks -O -d s_rho,-0.975 CB_all_var_05115.nc CB_all_var_surface_05115.nc
+ncks -O -d s_rho,-0.975 SB_all_var_05115.nc SB_all_var_surface_05115.nc
+
+# Move all files for the month to the proper directory
+
+mkdir January_5115/
+mv *5115.nc January_5115/
+
+### February 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05145.nc NB_all_var_05145.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05145.nc CB_all_var_05145.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05145.nc SB_all_var_05145.nc
+
+# Extract surface layer
+
+ncks -O -d s_rho,-0.975 NB_all_var_05145.nc NB_all_var_surface_05145.nc
+ncks -O -d s_rho,-0.975 CB_all_var_05145.nc CB_all_var_surface_05145.nc
+ncks -O -d s_rho,-0.975 SB_all_var_05145.nc SB_all_var_surface_05145.nc
+
+# Move all files for the month to the proper directory
+
+mkdir February_5145/
+mv *5145.nc February_5145/
+
+### March 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05175.nc NB_all_var_05175.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05175.nc CB_all_var_05175.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05175.nc SB_all_var_05175.nc
+
+# Extract surface layer
+
+ncks -O -d s_rho,-0.975 NB_all_var_05175.nc NB_all_var_surface_05175.nc
+ncks -O -d s_rho,-0.975 CB_all_var_05175.nc CB_all_var_surface_05175.nc
+ncks -O -d s_rho,-0.975 SB_all_var_05175.nc SB_all_var_surface_05175.nc
+
+# Move all files for the month to the proper directory
+
+mkdir March_5175/
+mv *5175.nc March_5175/
+
+### April 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05205.nc NB_all_var_05205.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05205.nc CB_all_var_05205.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05205.nc SB_all_var_05205.nc
+
+# Extract surface layer
+
+ncks -O -d s_rho,-0.975 NB_all_var_05205.nc NB_all_var_surface_05205.nc
+ncks -O -d s_rho,-0.975 CB_all_var_05205.nc CB_all_var_surface_05205.nc
+ncks -O -d s_rho,-0.975 SB_all_var_05205.nc SB_all_var_surface_05205.nc
+
+# Move all files for the month to the proper directory
+
+mkdir April_5205/
+mv *5205.nc April_5205/
+
+### May 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05235.nc NB_all_var_05235.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05235.nc CB_all_var_05235.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05235.nc SB_all_var_05235.nc
+
+# Extract surface layer
+
+ncks -O -d s_rho,-0.975 NB_all_var_05235.nc NB_all_var_surface_05235.nc
+ncks -O -d s_rho,-0.975 CB_all_var_05235.nc CB_all_var_surface_05235.nc
+ncks -O -d s_rho,-0.975 SB_all_var_05235.nc SB_all_var_surface_05235.nc
+
+# Move all files for the month to the proper directory
+
+mkdir May_5235/
+mv *5235.nc May_5235/
+
+### June 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05265.nc NB_all_var_05265.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05265.nc CB_all_var_05265.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05265.nc SB_all_var_05265.nc
+
+# Extract surface layer
+
+ncks -O -d s_rho,-0.975 NB_all_var_05265.nc NB_all_var_surface_05265.nc
+ncks -O -d s_rho,-0.975 CB_all_var_05265.nc CB_all_var_surface_05265.nc
+ncks -O -d s_rho,-0.975 SB_all_var_05265.nc SB_all_var_surface_05265.nc
+
+# Move all files for the month to the proper directory
+
+mkdir June_5265/
+mv *5265.nc June_5265/
+
+
+
+### July 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05295.nc NB_all_var_05295.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05295.nc CB_all_var_05295.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05295.nc SB_all_var_05295.nc
+
+# Extract surface layer
+
+ncks -O -d s_rho,-0.975 NB_all_var_05295.nc NB_all_var_surface_05295.nc
+ncks -O -d s_rho,-0.975 CB_all_var_05295.nc CB_all_var_surface_05295.nc
+ncks -O -d s_rho,-0.975 SB_all_var_05295.nc SB_all_var_surface_05295.nc
+
+# Move all files for the month to the proper directory
+
+mkdir July_5295/
+mv *5295.nc July_5295/
+
+### August 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05325.nc NB_all_var_05325.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05325.nc CB_all_var_05325.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05325.nc SB_all_var_05325.nc
+
+# Extract surface layer
+
+ncks -O -d s_rho,-0.975 NB_all_var_05325.nc NB_all_var_surface_05325.nc
+ncks -O -d s_rho,-0.975 CB_all_var_05325.nc CB_all_var_surface_05325.nc
+ncks -O -d s_rho,-0.975 SB_all_var_05325.nc SB_all_var_surface_05325.nc
+
+# Move all files for the month to the proper directory
+
+mkdir August_5325/
+mv *5325.nc August_5325/
+
+
+### September 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05355.nc NB_all_var_05355.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05355.nc CB_all_var_05355.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05355.nc SB_all_var_05355.nc
+
+# Extract surface layer
+
+ncks -O -d s_rho,-0.975 NB_all_var_05355.nc NB_all_var_surface_05355.nc
+ncks -O -d s_rho,-0.975 CB_all_var_05355.nc CB_all_var_surface_05355.nc
+ncks -O -d s_rho,-0.975 SB_all_var_05355.nc SB_all_var_surface_05355.nc
+
+# Move all files for the month to the proper directory
+
+mkdir September_5355/
+mv *5355.nc September_5355/
+
+### October 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05385.nc NB_all_var_05385.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05385.nc CB_all_var_05385.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05385.nc SB_all_var_05385.nc
+
+# Extract surface layer
+
+ncks -O -d s_rho,-0.975 NB_all_var_05385.nc NB_all_var_surface_05385.nc
+ncks -O -d s_rho,-0.975 CB_all_var_05385.nc CB_all_var_surface_05385.nc
+ncks -O -d s_rho,-0.975 SB_all_var_05385.nc SB_all_var_surface_05385.nc
+
+# Move all files for the month to the proper directory
+
+mkdir October_5385/
+mv *5385.nc October_5385/
+
+### November 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05415.nc NB_all_var_05415.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05415.nc CB_all_var_05415.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05415.nc SB_all_var_05415.nc
+
+# Extract surface layer
+
+ncks -O -d s_rho,-0.975 NB_all_var_05415.nc NB_all_var_surface_05415.nc
+ncks -O -d s_rho,-0.975 CB_all_var_05415.nc CB_all_var_surface_05415.nc
+ncks -O -d s_rho,-0.975 SB_all_var_05415.nc SB_all_var_surface_05415.nc
+
+# Move all files for the month to the proper directory
+
+mkdir November_5415/
+mv *5415.nc November_5415/
+
+### Note that I used ncra to join 5445 and the 5 day sequence in 5475. So 5445 contains 5475.
+
+### December 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05445.nc NB_all_var_05445.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05445.nc CB_all_var_05445.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,nsm,nlg,ndi,nsmz,nmdz,nlgz,ldon,sldon,srdon,nbact,nh4,no3,ndet,sio4,silg,sidet,cadet_calc,cadet_arag,lith,lithdet,ldop,sldop,srdop,po4,pdet,fesm,fedi,felg,fed,fedet,o2,dic,alk hioekg_monthly_mean_05445.nc SB_all_var_05445.nc
+
+# Extract surface layer
+
+ncks -O -d s_rho,-0.975 NB_all_var_05445.nc NB_all_var_surface_05445.nc
+ncks -O -d s_rho,-0.975 CB_all_var_05445.nc CB_all_var_surface_05445.nc
+ncks -O -d s_rho,-0.975 SB_all_var_05445.nc SB_all_var_surface_05445.nc
+
+# Move all files for the month to the proper directory
+
+mkdir December_5445/
+mv *5445.nc December_5445/
+
+
+### Seasonal averaging (surface)
+
+# Wet season 2014
+
+ncra January_5115/NB_all_var_surface_05115.nc February_5145/NB_all_var_surface_05145.nc March_5175/NB_all_var_surface_05175.nc April_5205/NB_all_var_surface_05205.nc May_5235/NB_all_var_surface_05235.nc October_5385/NB_all_var_surface_05385.nc November_5415/NB_all_var_surface_05415.nc December_5445/NB_all_var_surface_05445.nc NB_wet_season_2014_surface.nc
+
+ncra January_5115/CB_all_var_surface_05115.nc February_5145/CB_all_var_surface_05145.nc March_5175/CB_all_var_surface_05175.nc April_5205/CB_all_var_surface_05205.nc May_5235/CB_all_var_surface_05235.nc October_5385/CB_all_var_surface_05385.nc November_5415/CB_all_var_surface_05415.nc December_5445/CB_all_var_surface_05445.nc CB_wet_season_2014_surface.nc
+
+ncra January_5115/SB_all_var_surface_05115.nc February_5145/SB_all_var_surface_05145.nc March_5175/SB_all_var_surface_05175.nc April_5205/SB_all_var_surface_05205.nc May_5235/SB_all_var_surface_05235.nc October_5385/SB_all_var_surface_05385.nc November_5415/SB_all_var_surface_05415.nc December_5445/SB_all_var_surface_05445.nc SB_wet_season_2014_surface.nc
+
+# Dry season 2014
+
+ncra June_5265/NB_all_var_surface_05265.nc July_5295/NB_all_var_surface_05295.nc August_5325/NB_all_var_surface_05325.nc September_5355/NB_all_var_surface_05355.nc NB_dry_season_2014_surface.nc
+
+ncra June_5265/CB_all_var_surface_05265.nc July_5295/CB_all_var_surface_05295.nc August_5325/CB_all_var_surface_05325.nc September_5355/CB_all_var_surface_05355.nc CB_dry_season_2014_surface.nc
+
+ncra June_5265/SB_all_var_surface_05265.nc July_5295/SB_all_var_surface_05295.nc August_5325/SB_all_var_surface_05325.nc September_5355/SB_all_var_surface_05355.nc SB_dry_season_2014_surface.nc
+
+### Seasonal differences
+
+ncdiff NB_wet_season_2014_surface.nc NB_dry_season_2014_surface.nc NB_seasonal_difference_2014.nc
+
+ncdiff CB_wet_season_2014_surface.nc CB_dry_season_2014_surface.nc CB_seasonal_difference_2014.nc
+
+ncdiff SB_wet_season_2014_surface.nc SB_dry_season_2014_surface.nc SB_seasonal_difference_2014.nc
+
+### Seasonal percent differences
+
+ncbo --op_typ='/' NB_wet_season_2014_surface.nc NB_dry_season_2
+014_surface.nc NB_seasonal_div_2014.nc
+
+ncbo --op_typ='/' CB_wet_season_2014_surface.nc CB_dry_season_2014_surface.nc CB_seasonal_div_2014.nc
+
+ncbo --op_typ='/' SB_wet_season_2014_surface.nc SB_dry_season_2014_surface.nc SB_seasonal_div_2014.nc
+
+# po4: ~30 - 45% WS > DS
+
+# no3: ~15 - 60% WS > DS
+
+# nh4: no strong seasonal trends. Should be 1e-7 - 2e-7 mol/kg everywhere.
+
+# sio4: ~10 - 30% WS < DS
+
+## notes on latest run (with orig params): bring NO3 down quite a bit to see how it does. Still getting much more NO3 in wet v dry (13x!ratio). Po4 looks perfect. Nh4 is perfect. si should be reduced also by a bit so DS>WS.
+
+# For the second run I added one zero to no3. I added one zero to sio4.
+
+
