@@ -339,8 +339,8 @@ ncbo --op_typ='/' SB_wet_season_2013_surface.nc SB_dry_season_2013_surface.nc SB
 
 # sio4: ~10 - 30% WS < DS
 
-## notes on latest run (with orig params): bring NO3 down quite a bit to see how it does. Still getting much more NO3 in wet v dry (13x!ratio). Po4 looks perfect. Nh4 is perfect. si should be reduced also by a bit so DS>WS.
+## Notes on latest run (with orig params): bring NO3 down quite a bit to see how it does. Still getting much more NO3 in wet v dry (13x!ratio). Po4 looks perfect. Nh4 is perfect. si should be reduced also by a bit so DS>WS.
 
-# For the second run I added one zero to no3. I added one zero to sio4.
+# Notes on last run: or the second run I added one zero to no3. I added one zero to sio4.
 
 

@@ -1,33 +1,22 @@
 ## Dependency problems?
 conda update --all
 
-## Local use 
-
-# Set env
+## Set env (local use)
 export PATH=/share/apps/nco-4.7.6/bin:$PATH
 printf -v PATHIN "/home/lindsay/Downloads/"
 printf -v PATHOUT "/home/lindsay/Downloads/"
 
-## Server protocol
-
-# Copy files from local to server prior to ssh
+## Transfer files from local to server
+# Prior to ssh
 cd /home/lindsay/Documents/biogeochem_bonanza/
 scp COBALT_analyses.ipynb lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv/Manuscript
 
-scp /home/lindsay/Documents/biogeochem_bonanza/COBALT_bugs.ipynb lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv/Manuscript
-scp C:/Users/linds/Downloads/river.py lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv
 ssh -Y lindsayv@frinkiac.soest.hawaii.edu
 
-# Vice versa (updated for Gazelle 4/1/2019)
+## Transfer files from server to local
 scp lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv/Manuscript/COBALT_analyses.ipynb .
 
-# Set env
-export PATH=/share/apps/nco-4.7.6/bin:$PATH
-printf -v PATHIN "/share/frinkraid3/lindsayv/"
-printf -v PATHOUT "/share/frinkraid3/lindsayv/"
-
-# Change which server if one is busy
-
+## Change run server if one is busy
 # F2 has 4 nodes with 16 CPUs each. So, assuming you are running on 64 CPUs, you need to make changes in two places:
 
 # In spinup.sh:
@@ -40,9 +29,7 @@ ROMS_QUEUE_NAME="F2"
 
 # So basically 4x16 for "F2" instead of 8x8 for "default".
 
-#############################################################
-
-# This is a procedure to compute the temporal variance of u at all points in a single file. These files represent all months of available data at 2 depth strata (0.25 m = surface, 10 m), which was necessary due to the inability of the server to handle the full temporal series. 
+### This is a procedure to compute the temporal variance of u at all points in a single file. These files represent all months of available data at 2 depth strata (0.25 m = surface, 10 m), which was necessary due to the inability of the server to handle the full temporal series. 
 # 2018-07-01 to 2018-09-13
 
 # First, change all missing vals (-999) in original file (NOTE: neither of these function for my purposes currently) 

@@ -339,9 +339,3 @@ ncbo --op_typ='/' SB_wet_season_2014_surface.nc SB_dry_season_2014_surface.nc SB
 # nh4: no strong seasonal trends. Should be 1e-7 - 2e-7 mol/kg everywhere.
 
 # sio4: ~10 - 30% WS < DS
-
-## notes on latest run (with orig params): bring NO3 down quite a bit to see how it does. Still getting much more NO3 in wet v dry (13x!ratio). Po4 looks perfect. Nh4 is perfect. si should be reduced also by a bit so DS>WS.
-
-# For the second run I added one zero to no3. I added one zero to sio4.
-
-
