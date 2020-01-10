@@ -1,0 +1,370 @@
+# String of parameters
+k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz
+
+
+### Lrg phyto (diatom) params of interest
+
+k_sio4_Lg = "nutrient limitation parameter for large phytoplankton"
+prod_n_100_lg:long_name = "averaged nitrogen production for large phyto upper 100m" 
+zloss_n_100_lg:long_name = "averaged loss to zooplankton for large phyto upper 100m"
+
+
+### Small zoos
+
+prod_n_100_smz:long_name = "averaged nitrogen production for small zoo upper 100m"
+zloss_n_100_smz:long_name = "averaged loss to zooplankton for small zoo upper 100m" 
+hploss_n_100_smz:long_name = "averaged loss to higher predators for small zoo upper 100m" 
+
+
+### Med zoos
+
+prod_n_100_mdz:long_name = "averaged nitrogen production for medium zoo upper 100m" ;
+zloss_n_100_mdz:long_name = "averaged loss to zooplankton for medium zoo upper 100m" 
+hploss_n_100_mdz:long_name = "averaged loss to highe predators for medium zoo upper 100m" ;
+
+
+### Large zoos
+
+prod_n_100_lgz:long_name = "averaged nitrogen production for large zoo upper 100m" ;
+ingest_n_100_lgz:long_name = "averaged ingestion for large zoo upper 100m" ;
+hploss_n_100_lgz:long_name = "averaged loss to higher predators for large zoo upper 100m" ;
+
+
+# Params for later consideration, maybe...
+
+prod_n_100_sm:long_name: "averaged nitrogen production for small phyto upper 100m" 
+zloss_n_100_sm:long_name = "averaged loss to zooplankton for small phyto upper 100m"
+
+ 
+### Bash looping script: monthly averages ###
+
+# store path with input in local variable PATH2
+printf -v PATH2 "/share/frinkraid3/lindsayv/hioekg-2014/output_semi_daily/"
+cd $PATH2
+# define local variable tn0; here, the integer that corresponds to the ROMS time stamp on the file (without zero padding)  -- this is Jan 2, 2014
+tn0=5115
+# for loop: loop over 13 files
+for ((i=0; i<13; i++ ));
+do
+## NOW INSIDE FOR LOOP
+
+# in this printf command, %s means to copy a string
+# and %05d means a 5 digit integer padded with 0s on the left
+printf -v FNin "%shioekg_dia_%05d.nc" $PATH2 $tn0
+printf -v FNout "%shioekg_dia_monthly_mean_%05d.nc" $PATH2 $tn0
+# this command averages file FNin along the record dimension (time) and put the output in new file $FNout
+ncra $FNin $FNout
+# output to screen
+echo $tn0
+echo $FNin
+echo $FNout
+# increase tn0 by 30 days
+tn0=$((tn0+30))
+
+## done CLOSES FOR LOOP
+done
+cd $PATH2
+
+### Join December and end-of-year 5 day chunk ###
+
+ncra hioekg_dia_monthly_mean_05445.nc hioekg_dia_monthly_mean_05475.nc hioekg_dia_monthly_mean_05445.nc
+
+## (outside of ssh terminal) send monthly_mean files to local
+
+scp lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv/hioekg-2014/output_semi_daily/hioekg_dia_monthly* .
+
+
+### January 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05115.nc NB_dia_all_var_05115.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05115.nc CB_dia_all_var_05115.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05115.nc SB_dia_all_var_05115.nc
+
+
+# Move all files for the month to the proper directory
+
+mkdir January_5115/
+mv *5115.nc January_5115/
+
+### February 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05145.nc NB_dia_all_var_05145.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05145.nc CB_dia_all_var_05145.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05145.nc SB_dia_all_var_05145.nc
+
+
+# Move all files for the month to the proper directory
+
+mkdir February_5145/
+mv *5145.nc February_5145/
+
+### March 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05175.nc NB_dia_all_var_05175.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05175.nc CB_dia_all_var_05175.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05175.nc SB_dia_all_var_05175.nc
+
+# Move all files for the month to the proper directory
+
+mkdir March_5175/
+mv *5175.nc March_5175/
+
+### April 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05205.nc NB_dia_all_var_05205.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05205.nc CB_dia_all_var_05205.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05205.nc SB_dia_all_var_05205.nc
+
+
+# Move all files for the month to the proper directory
+
+mkdir April_5205/
+mv *5205.nc April_5205/
+
+### May 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05235.nc NB_dia_all_var_05235.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05235.nc CB_dia_all_var_05235.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05235.nc SB_dia_all_var_05235.nc
+
+# Move all files for the month to the proper directory
+
+mkdir May_5235/
+mv *5235.nc May_5235/
+
+### June 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05265.nc NB_dia_all_var_05265.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05265.nc CB_dia_all_var_05265.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05265.nc SB_dia_all_var_05265.nc
+
+
+# Move all files for the month to the proper directory
+
+mkdir June_5265/
+mv *5265.nc June_5265/
+
+
+
+### July 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05295.nc NB_dia_all_var_05295.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05295.nc CB_dia_all_var_05295.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05295.nc SB_dia_all_var_05295.nc
+
+
+# Move all files for the month to the proper directory
+
+mkdir July_5295/
+mv *5295.nc July_5295/
+
+### August 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05325.nc NB_dia_all_var_05325.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05325.nc CB_dia_all_var_05325.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05325.nc SB_dia_all_var_05325.nc
+
+
+# Move all files for the month to the proper directory
+
+mkdir August_5325/
+mv *5325.nc August_5325/
+
+
+### September 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05355.nc NB_dia_all_var_05355.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05355.nc CB_dia_all_var_05355.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05355.nc SB_dia_all_var_05355.nc
+
+# Move all files for the month to the proper directory
+
+mkdir September_5355/
+mv *5355.nc September_5355/
+
+### October 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05385.nc NB_dia_all_var_05385.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05385.nc CB_dia_all_var_05385.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05385.nc SB_dia_all_var_05385.nc
+
+# Move all files for the month to the proper directory
+
+mkdir October_5385/
+mv *5385.nc October_5385/
+
+### November 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05415.nc NB_dia_all_var_05415.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05415.nc CB_dia_all_var_05415.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05415.nc SB_dia_all_var_05415.nc
+
+# Move all files for the month to the proper directory
+
+mkdir November_5415/
+mv *5415.nc November_5415/
+
+### Note that I used ncra to join 5445 and the 5 day sequence in 5475. So 5445 contains 5475.
+
+### December 2014 ###
+
+# Divide the monthly mean file (produced by bash looping script) into sectors
+
+cdo masklonlatbox,-157.9,-157.77,21.48165,21.50835 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05445.nc NB_dia_all_var_05445.nc
+
+cdo masklonlatbox,-157.9,-157.755,21.44915,21.48165 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05445.nc CB_dia_all_var_05445.nc 
+
+cdo masklonlatbox,-157.9,-157.745,21.39,21.44915 -selname,k_sio4_Lg,prod_n_100_lg,zloss_n_100_lg,prod_n_100_smz,zloss_n_100_smz,hploss_n_100_smz,prod_n_100_mdz,zloss_n_100_mdz,hploss_n_100_mdz,prod_n_100_lgz,ingest_n_100_lgz,hploss_n_100_lgz hioekg_dia_monthly_mean_05445.nc SB_dia_all_var_05445.nc
+
+# Move all files for the month to the proper directory
+
+mkdir December_5445/
+mv *5445.nc December_5445/
+
+
+### Seasonal averaging (surface)
+
+# Wet season 2014
+
+ncra January_5115/NB_dia_all_var_05115.nc February_5145/NB_dia_all_var_05145.nc March_5175/NB_dia_all_var_05175.nc April_5205/NB_dia_all_var_05205.nc May_5235/NB_dia_all_var_05235.nc October_5385/NB_dia_all_var_05385.nc November_5415/NB_dia_all_var_05415.nc December_5445/NB_dia_all_var_05445.nc NB_wet_season_2014_surface.nc
+
+ncra January_5115/CB_dia_all_var_05115.nc February_5145/CB_dia_all_var_05145.nc March_5175/CB_dia_all_var_05175.nc April_5205/CB_dia_all_var_05205.nc May_5235/CB_dia_all_var_05235.nc October_5385/CB_dia_all_var_05385.nc November_5415/CB_dia_all_var_05415.nc December_5445/CB_dia_all_var_05445.nc CB_wet_season_2014_surface.nc
+
+ncra January_5115/SB_dia_all_var_05115.nc February_5145/SB_dia_all_var_05145.nc March_5175/SB_dia_all_var_05175.nc April_5205/SB_dia_all_var_05205.nc May_5235/SB_dia_all_var_05235.nc October_5385/SB_dia_all_var_05385.nc November_5415/SB_dia_all_var_05415.nc December_5445/SB_dia_all_var_05445.nc SB_wet_season_2014_surface.nc
+
+# Dry season 2014
+
+ncra June_5265/NB_dia_all_var_05265.nc July_5295/NB_dia_all_var_05295.nc August_5325/NB_dia_all_var_05325.nc September_5355/NB_dia_all_var_05355.nc NB_dry_season_2014_surface.nc
+
+ncra June_5265/CB_dia_all_var_05265.nc July_5295/CB_dia_all_var_05295.nc August_5325/CB_dia_all_var_05325.nc September_5355/CB_dia_all_var_05355.nc CB_dry_season_2014_surface.nc
+
+ncra June_5265/SB_dia_all_var_05265.nc July_5295/SB_dia_all_var_05295.nc August_5325/SB_dia_all_var_05325.nc September_5355/SB_dia_all_var_05355.nc SB_dry_season_2014_surface.nc
+
+### Seasonal differences
+
+ncdiff NB_wet_season_2014_surface.nc NB_dry_season_2014_surface.nc NB_seasonal_dia_difference_2014.nc
+
+ncdiff CB_wet_season_2014_surface.nc CB_dry_season_2014_surface.nc CB_seasonal_dia_difference_2014.nc
+
+ncdiff SB_wet_season_2014_surface.nc SB_dry_season_2014_surface.nc SB_seasonal_dia_difference_2014.nc
+
+### Seasonal percent differences
+
+ncbo --op_typ='/' NB_wet_season_2014_surface.nc NB_dry_season_2014_surface.nc NB_seasonal_dia_div_2014.nc
+
+ncbo --op_typ='/' CB_wet_season_2014_surface.nc CB_dry_season_2014_surface.nc CB_seasonal_dia_div_2014.nc
+
+ncbo --op_typ='/' SB_wet_season_2014_surface.nc SB_dry_season_2014_surface.nc SB_seasonal_dia_div_2014.nc
+
+# Annual divs
+
+cd /home/lindsay/hioekg-compare-years
+
+ncbo --op_typ='/' ../hioekg-2013/NB_wet_season_2013_surface.nc ../hioekg-2014/NB_wet_season_2014_surface.nc NB_wet_season_dia_div.nc
+
+ncbo --op_typ='/' ../hioekg-2013/CB_wet_season_2013_surface.nc ../hioekg-2014/CB_wet_season_2014_surface.nc CB_wet_season_dia_div.nc
+
+ncbo --op_typ='/' ../hioekg-2013/SB_wet_season_2013_surface.nc ../hioekg-2014/SB_wet_season_2014_surface.nc SB_wet_season_dia_div.nc
+
+ncbo --op_typ='/' ../hioekg-2013/NB_dry_season_2013_surface.nc ../hioekg-2014/NB_dry_season_2014_surface.nc NB_dry_season_dia_div.nc
+
+ncbo --op_typ='/' ../hioekg-2013/CB_dry_season_2013_surface.nc ../hioekg-2014/CB_dry_season_2014_surface.nc CB_dry_season_dia_div.nc
+
+ncbo --op_typ='/' ../hioekg-2013/SB_dry_season_2013_surface.nc ../hioekg-2014/SB_dry_season_2014_surface.nc SB_dry_season_dia_div.nc
+
+
+### Results
+
+### Lrg phyto (diatom) params of interest
+
+prod_n_100_lg:long_name = "averaged nitrogen production for large phyto upper 100m" 
+# wet: NB 0-15%, CB 0-20%, SB 18-34% higher than 2014
+# dry: NB usually -20% but -50% nearshore, CB usually -30% but -50% nearshore, -15- -25% SB 
+zloss_n_100_lg:long_name = "averaged loss to zooplankton for large phyto upper 100m"
+# wet: NB 0% usually but 40%! nearshore, CB 0-15%, SB 20-30%
+# dry: NB -30 - -70% (gradient to nearshore), CB - 30 - -50%, SB -20 - -30%
+
+
+### Small zoos
+
+prod_n_100_smz:long_name = "averaged nitrogen production for small zoo upper 100m"
+# wet: NB, CB, SB = 0%
+# dry: NB, CB, SB = -10 - -20% 
+zloss_n_100_smz:long_name = "averaged loss to zooplankton for small zoo upper 100m" 
+# wet: 0% usually but 40%! nearshore NB, 0% CB, 15% SB
+# dry: -20 - -30% NB, -20 - -30% CB, -10 - 0% SB 
+hploss_n_100_smz:long_name = "averaged loss to higher predators for small zoo upper 100m" 
+# wet: NB, CB, SB = 0%
+# dry: NB, CB, SB = 0%
+
+
+### Med zoos
+
+prod_n_100_mdz:long_name = "averaged nitrogen production for medium zoo upper 100m" ;
+# wet: 0% usually but 40% nearshore NB, 0% CB, 20% SB
+# dry: -20- -30% NB, -20- -30% CB, -10% SB 
+zloss_n_100_mdz:long_name = "averaged loss to zooplankton for medium zoo upper 100m" 
+# wet: 0% NB, 0% CB, 15-20% SB
+# dry: NB, CB, SB = -50%
+hploss_n_100_mdz:long_name = "averaged loss to highe predators for medium zoo upper 100m" ;
+# wet: 0% usually but 40% nearshore NB, 15% CB, 25-30% SB
+# dry: NB, CB, SB = -~30% nearshore to < -10% outer
+
+
+### Large zoos
+
+prod_n_100_lgz:long_name = "averaged nitrogen production for large zoo upper 100m" ;
+# wet: 0% NB, 0% CB, 20-25% SB
+# dry: NB, CB, SB = -50 - -60% 
+ingest_n_100_lgz:long_name = "averaged ingestion for large zoo upper 100m" ;
+# wet: 0% NB, 0% CB, 10-15% SB
+# dry: NB, CB, SB: -40 - -60%
+hploss_n_100_lgz:long_name = "averaged loss to higher predators for large zoo upper 100m" ;
+# wet: NB, CB, SB = -10% - 0%
+# dry: NB, CB, SB = 30 - 40% higher in 2013 to 2014
+
+
