@@ -16,6 +16,8 @@ scp lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv/hioekg-2014/ou
 
 scp lindsayv@frinkiac.soest.hawaii.edu:/share/frinkraid3/lindsayv/hioekg-2014/output_semi_daily/hioekg_monthly_mean_05205.nc .
 
+cd ..
+cd hioekg-2013
 
 ### February 2013 ###
 
@@ -35,7 +37,6 @@ ncks -O -d s_rho,-0.975 SB_all_var_04780.nc SB_all_var_surface_04780.nc
 
 # Move all files for the month to the proper directory
 
-mkdir February_4780/
 mv *4780.nc February_4780/
 
 ### March 2013 ###
@@ -56,7 +57,6 @@ ncks -O -d s_rho,-0.975 SB_all_var_04810.nc SB_all_var_surface_04810.nc
 
 # Move all files for the month to the proper directory
 
-mkdir March_4810/
 mv *4810.nc March_4810/
 
 ### April 2013 ###
@@ -77,9 +77,13 @@ ncks -O -d s_rho,-0.975 SB_all_var_04840.nc SB_all_var_surface_04840.nc
 
 # Move all files for the month to the proper directory
 
-mkdir April_4840/
 mv *4840.nc April_4840/
 
+mv *_early_spring_2013_surface.nc ../hioekg-compare-years
+
+
+cd ..
+cd hioekg-2014 
 
 ### February 2014 ###
 
@@ -99,7 +103,6 @@ ncks -O -d s_rho,-0.975 SB_all_var_05145.nc SB_all_var_surface_05145.nc
 
 # Move all files for the month to the proper directory
 
-mkdir February_5145/
 mv *5145.nc February_5145/
 
 ### March 2014 ###
@@ -120,7 +123,6 @@ ncks -O -d s_rho,-0.975 SB_all_var_05175.nc SB_all_var_surface_05175.nc
 
 # Move all files for the month to the proper directory
 
-mkdir March_5175/
 mv *5175.nc March_5175/
 
 ### April 2014 ###
@@ -141,11 +143,10 @@ ncks -O -d s_rho,-0.975 SB_all_var_05205.nc SB_all_var_surface_05205.nc
 
 # Move all files for the month to the proper directory
 
-mkdir April_5205/
 mv *5205.nc April_5205/
 
-
-
+cd ..
+cd hioekg-2013
 # Early spring 2013
 
 ncra February_4780/NB_all_var_surface_04780.nc March_4810/NB_all_var_surface_04810.nc April_4840/NB_all_var_surface_04840.nc NB_early_spring_2013_surface.nc
@@ -155,6 +156,7 @@ ncra February_4780/CB_all_var_surface_04780.nc March_4810/CB_all_var_surface_048
 ncra February_4780/SB_all_var_surface_04780.nc March_4810/SB_all_var_surface_04810.nc April_4840/SB_all_var_surface_04840.nc SB_early_spring_2013_surface.nc
 
 
+cd ../hioekg-2014
 # Early spring 2014
 
 ncra February_5145/NB_all_var_surface_05145.nc March_5175/NB_all_var_surface_05175.nc April_5205/NB_all_var_surface_05205.nc NB_early_spring_2014_surface.nc
@@ -163,12 +165,14 @@ ncra February_5145/CB_all_var_surface_05145.nc March_5175/CB_all_var_surface_051
 
 ncra February_5145/SB_all_var_surface_05145.nc March_5175/SB_all_var_surface_05175.nc April_5205/SB_all_var_surface_05205.nc SB_early_spring_2014_surface.nc
 
+mv *_early_spring_2014_surface.nc ../hioekg-compare-years
+cd ../hioekg-compare-years
 
 ### Annual early spring percent differences
 
 ncbo --op_typ='/' NB_early_spring_2013_surface.nc NB_early_spring_2014_surface.nc NB_early_spring_div_2013.nc
 
-ncbo --op_typ='/' CB_early_spring_2013_surface.nc CB_early_spring_2014_surface.nc CB_seasonal_div_2013.nc
+ncbo --op_typ='/' CB_early_spring_2013_surface.nc CB_early_spring_2014_surface.nc CB_early_spring_div_2013.nc
 
-ncbo --op_typ='/' SB_early_spring_2013_surface.nc SB_early_spring_2014_surface.nc SB_seasonal_div_2013.nc
+ncbo --op_typ='/' SB_early_spring_2013_surface.nc SB_early_spring_2014_surface.nc SB_early_spring_div_2013.nc
 
