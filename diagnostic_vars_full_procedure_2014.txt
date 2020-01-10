@@ -328,6 +328,7 @@ zloss_n_100_lg:long_name = "averaged loss to zooplankton for large phyto upper 1
 # wet: NB 0% usually but 40%! nearshore, CB 0-15%, SB 20-30%
 # dry: NB -30 - -70% (gradient to nearshore), CB - 30 - -50%, SB -20 - -30%
 
+"Model diagnostics provide some evidence to support the validity of our two-part hypothesis (i.e., anomalously high silicate, signaling a diatomaceous bloom, indicated disruption in the feeding patterns of large zooplankton, which benefited larval fish). Large phytoplankton produced 20 - 50% more nitrogen and were consumed by zooplankton at rates 30 - 70% higher (highest nearshore) across the bay during the 2014 versus 2013 dry season."
 
 ### Small zoos
 
@@ -363,8 +364,16 @@ prod_n_100_lgz:long_name = "averaged nitrogen production for large zoo upper 100
 ingest_n_100_lgz:long_name = "averaged ingestion for large zoo upper 100m" ;
 # wet: 0% NB, 0% CB, 10-15% SB
 # dry: NB, CB, SB: -40 - -60%
+"Large zooplankton were 40 - 60% more productive (i.e., ingested more nitrogen) in the upper 100 m of the water column during the 2014 versus 2013 dry season." 
+
 hploss_n_100_lgz:long_name = "averaged loss to higher predators for large zoo upper 100m" ;
 # wet: NB, CB, SB = -10% - 0%
-# dry: NB, CB, SB = 30 - 40% higher in 2013 to 2014
+# dry: NB, CB, SB = 30 - 40% higher in 2013 to 2014. 
+
+"Our model diagnostics also show that in the 2013 dry season, large zooplankton were consumed by higher predators at a rate 30 - 40% higher than the same period in 2014. Large zooplankton were 40 - 60% more productive (i.e., ingested more nitrogen) in the upper 100 m of the water column during the 2014 versus 2013 dry season."
+
+"When comparing these energy exchanges between years for the wet season, spatial differences beyond 15% were infrequent."
+
+# Fish and other higher predators in COBALT are represented implicitly as a mortality term on medium and large zooplankton. It is assumed that the biomass of higher predators scales with the biomass of prey available to them. Ingestion by higher predators (jhp_ingest_n) and losses to higher predators (jhploss_n; jhploss_p) are then calculated in a manner analogous to zooplankton.
 
 
